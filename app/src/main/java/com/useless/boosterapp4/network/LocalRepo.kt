@@ -1,27 +1,38 @@
 package com.useless.boosterapp4.network
 
+import android.os.CountDownTimer
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 object LocalRepo {
 
+    var seconds: Int = 0
+
+    private val timer = object: CountDownTimer(10000, 1000) {
+        override fun onTick(millisUntilFinished: Long) {
+            seconds = (millisUntilFinished / 1000).toInt()
+        }
+        override fun onFinish() {
+        }
+    }
+
     private val apiServices: ApiInterface by lazy {
         APIClient.getClient().create(ApiInterface::class.java)
     }
 
-    //TODO Get the api key.
-    private const val apiKey = ""
+    private const val apiKey = "6637f7d017283c784ff6746c01f71453"
 
     private lateinit var movieListData: List<Movie?>
     private lateinit var movieData: Movie
 
     fun requestMovieList(callback: MovieListCallback){
-        if (this::movieData.isInitialized /* TODO && timer is not done*/) {
+        if (this::movieData.isInitialized && seconds != 0) {
+
             callback.onMovieListReady(movieListData)
             return
         }
-
+        timer.start()
         apiServices.doGetMoviesList(apiKey)
             .enqueue(object : Callback<List<Movie?>?> {
 
@@ -46,17 +57,16 @@ object LocalRepo {
                 }
 
 
-
             })
 
     }
 
     fun requestMovieData(callback: MovieCallback, movieID: Int){
-        if (this::movieData.isInitialized /* TODO && timer is not done*/) {
+        if (this::movieData.isInitialized && seconds != 0) {
             callback.onMovieReady(movieData)
             return
         }
-
+        timer.start()
         apiServices.doGetMovieByID(movieID, apiKey)
             .enqueue(object : Callback<Movie> {
 
@@ -79,7 +89,6 @@ object LocalRepo {
                     val msg = "Error while getting movie data"
                     callback.onMovieError(msg)
                 }
-
 
 
             })
