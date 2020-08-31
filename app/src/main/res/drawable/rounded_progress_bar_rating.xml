@@ -13,8 +13,8 @@
         android:useLevel="true">
 
         <gradient
-            android:startColor="#008CB3"
-            android:endColor="#90CEA1"
+            android:startColor="#BB008CB3"
+            android:endColor="#BB90CEA1"
             android:angle="180"/>
     </shape>
 
