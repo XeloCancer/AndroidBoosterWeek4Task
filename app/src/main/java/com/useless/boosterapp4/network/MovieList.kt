@@ -9,6 +9,6 @@ class MovieList(
     val totalPages: Int,
     @SerializedName("page")
     val page: Int
-) {
+    ) {
 
 }

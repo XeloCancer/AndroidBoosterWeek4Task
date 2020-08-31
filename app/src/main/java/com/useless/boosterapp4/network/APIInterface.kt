@@ -12,5 +12,5 @@ interface ApiInterface {
 
 
     @GET("/movie/{id}")
-    fun doGetMovieByID(@Path("id") movieID: Int)
+    fun doGetMovieByID(@Path("id") movieID: Int, @Query("api_key") apiKey: String): Call<Movie>
 }
