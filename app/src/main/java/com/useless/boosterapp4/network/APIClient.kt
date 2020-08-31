@@ -11,7 +11,7 @@ object APIClient {
     fun getClient(): Retrofit{
         if(retrofit == null)
             retrofit = Retrofit.Builder()
-                .baseUrl("INSERT BASE URL HERE FROM API DOCUMENTATION/")
+                .baseUrl("https://api.themoviedb.org/3/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(OkHttpClient.Builder().build())
                 .build()
