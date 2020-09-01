@@ -1,4 +1,4 @@
-package com.useless.boosterapp4
+package com.useless.boosterapp4.recycler
 
 import android.view.View
 import android.widget.ImageView

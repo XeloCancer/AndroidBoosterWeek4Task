@@ -4,10 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
+import com.useless.boosterapp4.network.LocalRepo
+import com.useless.boosterapp4.network.Movie
+import com.useless.boosterapp4.recycler.RecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,7 +23,12 @@ class MainActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab){
                     latest_tab -> Toast.makeText(this@MainActivity, "Latest Tab Selected", Toast.LENGTH_SHORT).show()
-                    most_popular_tab -> Toast.makeText(this@MainActivity, "Most Popular Tab Selected", Toast.LENGTH_SHORT).show()
+                    most_popular_tab -> {
+                        Toast.makeText(this@MainActivity, "Most Popular Tab Selected", Toast.LENGTH_SHORT).show()
+                        movie_list_recycler_view.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+                        movie_list_recycler_view.layoutManager = GridLayoutManager(this@MainActivity, 2)
+                        LocalRepo.requestMovieList(this@MainActivity)
+                    }
                     top_rated_tab -> Toast.makeText(this@MainActivity, "Top Rated Selected", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -62,4 +71,15 @@ class MainActivity : AppCompatActivity() {
             //TODO: call API with same data but query page = pageNum - 1
         }
     }
+
+    override fun onMovieListReady(movieData: List<Movie>) {
+        movie_list_recycler_view.adapter = RecyclerAdapter(movieData)
+    }
+
+    override fun onMovieListError(errorMsg: String) {
+        Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
+    }
+
+
+
 }

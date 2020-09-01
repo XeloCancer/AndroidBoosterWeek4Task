@@ -23,7 +23,7 @@ object LocalRepo {
 
     private const val apiKey = "6637f7d017283c784ff6746c01f71453"
 
-    private lateinit var movieListData: List<Movie?>
+    private lateinit var movieListData: List<Movie>
     private lateinit var movieData: Movie
 
     fun requestMovieList(callback: MovieListCallback){
@@ -34,11 +34,11 @@ object LocalRepo {
         }
         timer.start()
         apiServices.doGetMoviesList(apiKey)
-            .enqueue(object : Callback<List<Movie?>?> {
+            .enqueue(object : Callback<List<Movie>> {
 
                 override fun onResponse(
-                    call: Call<List<Movie?>?>,
-                    response: Response<List<Movie?>?>
+                    call: Call<List<Movie>>,
+                    response: Response<List<Movie>>
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
@@ -50,7 +50,7 @@ object LocalRepo {
                     }
                 }
 
-                override fun onFailure(call: Call<List<Movie?>?>, t: Throwable) {
+                override fun onFailure(call: Call<List<Movie>>, t: Throwable) {
                     t.printStackTrace()
                     val msg = "Error while getting movie data"
                     callback.onMovieListError(msg)
@@ -97,7 +97,7 @@ object LocalRepo {
 
 
     interface MovieListCallback{
-        fun onMovieListReady(movieData: List<Movie?>?)
+        fun onMovieListReady(movieData: List<Movie>)
         fun onMovieListError(errorMsg: String)
     }
 
