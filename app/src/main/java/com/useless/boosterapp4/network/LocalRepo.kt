@@ -6,7 +6,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 object LocalRepo {
-
+/*
     var seconds: Int = 0
 
     private val timer = object: CountDownTimer(10000, 1000) {
@@ -16,7 +16,7 @@ object LocalRepo {
         override fun onFinish() {
         }
     }
-
+*/
     private val apiServices: ApiInterface by lazy {
         APIClient.getClient().create(ApiInterface::class.java)
     }
@@ -27,12 +27,11 @@ object LocalRepo {
     private lateinit var movieData: Movie
 
     fun requestMovieList(callback: MovieListCallback){
-        if (this::movieData.isInitialized && seconds != 0) {
+        if (this::movieData.isInitialized) {
 
             callback.onMovieListReady(movieListData)
             return
         }
-        timer.start()
         apiServices.doGetMoviesList(apiKey)
             .enqueue(object : Callback<List<Movie>> {
 
@@ -62,11 +61,10 @@ object LocalRepo {
     }
 
     fun requestMovieData(callback: MovieCallback, movieID: Int){
-        if (this::movieData.isInitialized && seconds != 0) {
+        if (this::movieData.isInitialized) {
             callback.onMovieReady(movieData)
             return
         }
-        timer.start()
         apiServices.doGetMovieByID(movieID, apiKey)
             .enqueue(object : Callback<Movie> {
 
