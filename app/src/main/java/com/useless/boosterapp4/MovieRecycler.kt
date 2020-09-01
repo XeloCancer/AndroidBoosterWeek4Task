@@ -6,23 +6,24 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.useless.boosterapp4.network.Movie
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.useless.boosterapp4.network.APIClient
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MovieRecycler : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout."the movie activity layout will be here")
+        setContentView(R.layout.activity_main)
 
-        "RecyclerView id will be here".LayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        "RecyclerView id will be here".LayoutManager = GridLayoutManager(this, 2)
-        "RecyclerView id will be here".adapter = RecyclerAdapter(getMovies())
+        movie_list_recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        movie_list_recycler_view.layoutManager = GridLayoutManager(this, 2)
+        movie_list_recycler_view.adapter = RecyclerAdapter(getMovies())
 
     }
 
     private fun getMovies(): List<Movie>{
         val moviesList = ArrayList<Movie>()
 
-        moviesList.add(Movie(APIClient.getClient()))
+
 
         return moviesList
     }

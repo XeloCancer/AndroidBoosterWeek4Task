@@ -11,13 +11,13 @@ class RecyclerAdapter (private val listOfMovies: List<Movie>): RecyclerView.Adap
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val noteView = layoutInflater.inflate(R.layout."the movie item temp will be here", parent, false)
+        val noteView = layoutInflater.inflate(R.layout.movie_recycler_item, parent, false)
         return MovieViewHolder(noteView)
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = listOfMovies[position]
-        holder.moviePicture.setImageResource(movie.moviePicture)
+        holder.moviePicture?.setImageResource(movie.moviePicture)
     }
 
     override fun getItemCount(): Int {
@@ -25,6 +25,3 @@ class RecyclerAdapter (private val listOfMovies: List<Movie>): RecyclerView.Adap
     }
 }
 
-private fun Retrofit.setImageResource(moviePicture: Retrofit) {
-    TODO("Not yet implemented")
-}
