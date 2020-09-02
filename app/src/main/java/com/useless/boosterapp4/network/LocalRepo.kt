@@ -3,6 +3,8 @@ package com.useless.boosterapp4.network
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.ProgressBar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,7 +30,7 @@ object LocalRepo {
     private lateinit var movieListData: MovieList
     private lateinit var movieData: Movie
 
-    fun requestMovieList(callback: MovieListCallback, loadingBar : ProgressBar){
+    fun requestMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int){
         if (this::movieListData.isInitialized) {
 
             callback.onMovieListReady(movieListData)
@@ -36,7 +38,7 @@ object LocalRepo {
         }
 
         loadingBar.visibility = View.VISIBLE
-        apiServices.doGetMoviesList(apiKey)
+        apiServices.doGetMoviesList(apiKey, page = page)
             .enqueue(object : Callback<MovieList> {
 
                 override fun onResponse(

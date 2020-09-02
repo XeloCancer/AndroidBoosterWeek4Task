@@ -6,7 +6,6 @@ import com.useless.boosterapp4.network.Movie
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.MovieViewHolder
-import com.useless.boosterapp4.R
 
 class RecyclerAdapter (private val listOfMovies: List<Movie>?): RecyclerView.Adapter<MovieViewHolder>(){
 

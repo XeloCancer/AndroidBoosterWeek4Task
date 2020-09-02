@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.useless.boosterapp4.network.LocalRepo
 import com.useless.boosterapp4.network.MovieList
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,41 +24,66 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
     private val lightColor : Int = Color.parseColor("#A0A0A0")
     private val dimColor : Int = Color.parseColor("#F0F0F0")
 
+    private lateinit var moviesAdapter: RecyclerAdapter
+    private lateinit var layoutManager: LinearLayoutManager
+    private var page : Int = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        movie_list_recycler_view.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        layoutManager = GridLayoutManager(this, 2)
 
-        movie_list_recycler_view.layoutManager = GridLayoutManager(this, 2)
+        movie_list_recycler_view.layoutManager = layoutManager
 
         movie_list_recycler_view.adapter = RecyclerAdapter(null)
 
         //TODO To call data on app launch. There is definitely a better way to do this so if you have ideas, please do it
-        LocalRepo.requestMovieList(this@MainActivity, loading_bar)
+        LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
 
         //Responsible for handling changes to button clicks
         button_group.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            page = 1
             when(group.checkedButtonId){
                 most_popular_button.id -> {
-                    LocalRepo.requestMovieList(this@MainActivity, loading_bar)
+                    LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
 
                     //To animate color change for different buttons
-                    colorAnimLightMostPopular = ObjectAnimator.ofInt(most_popular_button, "textColor", lightColor, dimColor)
-                    colorAnimDimMostPopular = ObjectAnimator.ofInt(top_rated_button, "textColor", dimColor, lightColor)
+                    colorAnimLightMostPopular = ObjectAnimator.ofInt(
+                        most_popular_button,
+                        "textColor",
+                        lightColor,
+                        dimColor
+                    )
+                    colorAnimDimMostPopular = ObjectAnimator.ofInt(
+                        top_rated_button,
+                        "textColor",
+                        dimColor,
+                        lightColor
+                    )
                     colorAnimLightMostPopular.setEvaluator(ArgbEvaluator())
                     colorAnimDimMostPopular.setEvaluator(ArgbEvaluator())
                     colorAnimLightMostPopular.start()
                     colorAnimDimMostPopular.start()
                 }
+
                 top_rated_button.id -> {
                     //TODO Adjust this to suit Top Rated API when created
-                    LocalRepo.requestMovieList(this@MainActivity, loading_bar)
+                    LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
 
                     //To animate color change for different buttons
-                    colorAnimLightTopRated = ObjectAnimator.ofInt(top_rated_button, "textColor", lightColor, dimColor)
-                    colorAnimDimTopRated = ObjectAnimator.ofInt(most_popular_button, "textColor", dimColor, lightColor)
+                    colorAnimLightTopRated = ObjectAnimator.ofInt(
+                        top_rated_button,
+                        "textColor",
+                        lightColor,
+                        dimColor
+                    )
+                    colorAnimDimTopRated = ObjectAnimator.ofInt(
+                        most_popular_button,
+                        "textColor",
+                        dimColor,
+                        lightColor
+                    )
                     colorAnimLightTopRated.setEvaluator(ArgbEvaluator())
                     colorAnimDimTopRated.setEvaluator(ArgbEvaluator())
                     colorAnimLightTopRated.start()
@@ -65,6 +91,21 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
                 }
             }
         }
+
+        movie_list_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy > 0) { //check for scroll down
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.getItemCount()
+                    val pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
+
+                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                            page.inc()
+                            LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
+                        }
+                }
+            }
+        })
 
     }
 
