@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
     private val lightColor : Int = Color.parseColor("#A0A0A0")
     private val dimColor : Int = Color.parseColor("#F0F0F0")
 
-    private lateinit var moviesAdapter: RecyclerAdapter
+    //private lateinit var moviesAdapter: RecyclerAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var page : Int = 1
 
@@ -68,8 +68,8 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
                 }
 
                 top_rated_button.id -> {
-                    //TODO Adjust this to suit Top Rated API when created
-                    LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
+
+                    LocalRepo.requestTopRatedMovieList(this@MainActivity, loading_bar, page)
 
                     //To animate color change for different buttons
                     colorAnimLightTopRated = ObjectAnimator.ofInt(
