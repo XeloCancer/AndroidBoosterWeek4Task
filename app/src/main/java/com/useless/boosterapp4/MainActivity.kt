@@ -13,7 +13,7 @@ import com.useless.boosterapp4.network.LocalRepo
 import com.useless.boosterapp4.network.MovieList
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
+class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback, RecyclerAdapter.PageControl {
 
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
@@ -28,6 +28,18 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
     private lateinit var layoutManager: LinearLayoutManager
     private var page : Int = 1
 
+    override fun nextPage(movieListData: MovieList){
+        var pageNum = movieListData.page
+        var totalPages = movieListData.totalPages
+        if(pageNum == totalPages){
+            Toast.makeText(applicationContext, "You're already at the last page", Toast.LENGTH_SHORT).show()
+            return
+        }else{
+            page++
+            LocalRepo.requestLastFun(this@MainActivity, loading_bar, page, true)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,7 +48,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
 
         movie_list_recycler_view.layoutManager = layoutManager
 
-        movie_list_recycler_view.adapter = RecyclerAdapter(null)
+        movie_list_recycler_view.adapter = RecyclerAdapter(null, null, this@MainActivity)
 
         //TODO To call data on app launch. There is definitely a better way to do this so if you have ideas, please do it
         LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
@@ -91,7 +103,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
                 }
             }
         }
-
+/*      COMMENTED TO TEST A MORE STABLE WAY OF SHOWING NEXT PAGE
         movie_list_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) { //check for scroll down
@@ -105,20 +117,13 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
                         }
                 }
             }
-        })
+        })*/
 
     }
 
 
 
-    fun nextPage(pageNum: Int, totalPages: Int){
-        if(pageNum == totalPages){
-            Toast.makeText(applicationContext, "You're already at the last page", Toast.LENGTH_SHORT).show()
-            return
-        }else{
-            //TODO: call API with same data but query page = pageNum + 1
-        }
-    }
+
     fun prevPage(pageNum: Int){
         if(pageNum == 1){
             Toast.makeText(applicationContext, "You're already at the first page", Toast.LENGTH_SHORT).show()
@@ -130,7 +135,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
 
     override fun onMovieListReady(movieData: MovieList) {
         Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
-        movie_list_recycler_view.adapter = RecyclerAdapter(movieData.list)
+        movie_list_recycler_view.adapter = RecyclerAdapter(movieData, movieData.list, this@MainActivity)
     }
 
     override fun onMovieListError(errorMsg: String) {
