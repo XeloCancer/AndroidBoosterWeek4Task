@@ -9,6 +9,7 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -19,51 +20,28 @@
             app:layout_scrollFlags="scroll|enterAlways"
             tools:context=".MainActivity">
 
+            <Button
+                android:id="@+id/callAPIbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:text="I am a button"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="48dp"
                 android:layout_height="40dp"
                 android:layout_margin="12dp"
+                android:contentDescription="@string/app_logo"
                 android:src="@drawable/the_movie_database_logo"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/app_logo" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tab_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp"
-                android:background="@android:color/transparent"
-                app:layout_constraintBottom_toBottomOf="@id/logo"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/logo"
-                app:layout_constraintTop_toTopOf="@id/logo"
-                app:tabIndicatorHeight="0dp"
-                app:tabInlineLabel="true"
-                app:tabMode="scrollable"
-                app:tabTextAppearance="@style/TabTextAppearence"
-                app:tabTextColor="@color/tab_data_color">
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/latest_tab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/latest" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/most_popular_tab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/most_popular" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/top_rated_tab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/top_rated" />
-
-            </com.google.android.material.tabs.TabLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -74,6 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

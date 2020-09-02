@@ -23,35 +23,36 @@ object LocalRepo {
 
     private const val apiKey = "6637f7d017283c784ff6746c01f71453"
 
-    private lateinit var movieListData: List<Movie>
+    private lateinit var movieListData: MovieList
     private lateinit var movieData: Movie
 
     fun requestMovieList(callback: MovieListCallback){
-        if (this::movieData.isInitialized) {
+        if (this::movieListData.isInitialized) {
 
             callback.onMovieListReady(movieListData)
             return
         }
         apiServices.doGetMoviesList(apiKey)
-            .enqueue(object : Callback<List<Movie>> {
+            .enqueue(object : Callback<MovieList> {
 
                 override fun onResponse(
-                    call: Call<List<Movie>>,
-                    response: Response<List<Movie>>
+                    call: Call<MovieList>,
+                    response: Response<MovieList>
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
                         movieListData = response.body()!!
                         callback.onMovieListReady(movieListData)
                     } else if (response.code() in 400..404) {
-                        val msg = "The movies didn't load properly from the API"
+
+                        val msg = "The movies didn't load properly from the API ${response.code()}"
                         callback.onMovieListError(msg)
                     }
                 }
 
-                override fun onFailure(call: Call<List<Movie>>, t: Throwable) {
+                override fun onFailure(call: Call<MovieList>, t: Throwable) {
                     t.printStackTrace()
-                    val msg = "Error while getting movie data"
+                    val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
                 }
 
@@ -81,21 +82,17 @@ object LocalRepo {
                         callback.onMovieError(msg)
                     }
                 }
-
                 override fun onFailure(call: Call<Movie>, t: Throwable) {
                     t.printStackTrace()
                     val msg = "Error while getting movie data"
                     callback.onMovieError(msg)
                 }
-
-
             })
-
     }
 
 
     interface MovieListCallback{
-        fun onMovieListReady(movieData: List<Movie>)
+        fun onMovieListReady(movieData: MovieList)
         fun onMovieListError(errorMsg: String)
     }
 

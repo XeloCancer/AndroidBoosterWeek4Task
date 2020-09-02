@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.useless.boosterapp4.network.LocalRepo
 import com.useless.boosterapp4.network.Movie
+import com.useless.boosterapp4.network.MovieList
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
@@ -22,39 +23,9 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
 
         movie_list_recycler_view.adapter = RecyclerAdapter(null)
 
-        //Change behavior depending on selected tab
-        //https://material.io/develop/android/components/tabs for more information
-        //Also check on stackoverflow
-        tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab){
-                    latest_tab -> Toast.makeText(this@MainActivity, "Latest Tab Selected", Toast.LENGTH_SHORT).show()
-                    most_popular_tab -> {
-                        Toast.makeText(this@MainActivity, "Most Popular Tab Selected", Toast.LENGTH_SHORT).show()
-                        LocalRepo.requestMovieList(this@MainActivity)
-                    }
-                    top_rated_tab -> Toast.makeText(this@MainActivity, "Top Rated Selected", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-                when (tab){
-                    latest_tab -> Toast.makeText(this@MainActivity, "Latest Tab Unselected", Toast.LENGTH_SHORT).show()
-                    most_popular_tab -> Toast.makeText(this@MainActivity, "Most Popular Tab Unselected", Toast.LENGTH_SHORT).show()
-                    top_rated_tab -> Toast.makeText(this@MainActivity, "Top Rated Unselected", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab) {
-                when (tab){
-                    latest_tab -> Toast.makeText(this@MainActivity, "Latest Tab Selected", Toast.LENGTH_SHORT).show()
-                    most_popular_tab -> Toast.makeText(this@MainActivity, "Most Popular Tab Selected", Toast.LENGTH_SHORT).show()
-                    top_rated_tab -> Toast.makeText(this@MainActivity, "Top Rated Selected", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-        })
-
+        callAPIbtn.setOnClickListener {
+            LocalRepo.requestMovieList(this@MainActivity)
+        }
 
     }
 
@@ -77,18 +48,13 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
         }
     }
 
-    override fun onMovieListReady(movieData: List<Movie>) {
-        Toast.makeText(this@MainActivity, "THIS IS AN ERROR", Toast.LENGTH_LONG).show()
-        movie_list_recycler_view.adapter = RecyclerAdapter(movieData)
+    override fun onMovieListReady(movieData: MovieList) {
+        Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
+        movie_list_recycler_view.adapter = RecyclerAdapter(movieData.list)
     }
 
     override fun onMovieListError(errorMsg: String) {
         Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
     }
-/*
-    fun mostPopClicked(view: View){
-        latest_tab -> Toast.makeText(this@MainActivity, "Latest Tab Selected", Toast.LENGTH_SHORT).show()
-    }
-*/
 
 }
