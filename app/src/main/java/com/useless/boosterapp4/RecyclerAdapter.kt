@@ -19,6 +19,9 @@ class RecyclerAdapter (private val listOfMovies: List<Movie>?): RecyclerView.Ada
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = listOfMovies?.get(position)
         Picasso.get().load("https://image.tmdb.org/t/p/w500/${movie?.posterPath}").into(holder.moviePicture)
+        holder.movieTitle.text = movie!!.title
+        holder.rating.text = "${(movie.voteAvg.toDouble() * 10).toInt()}%"
+        holder.ratingBar.progress = (movie.voteAvg.toDouble() * 10).toInt()
     }
 
     override fun getItemCount(): Int {

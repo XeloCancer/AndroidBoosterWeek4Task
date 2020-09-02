@@ -11,7 +11,7 @@ class Movie(
         val posterPath: String?,
         @SerializedName("original_language")
         val lang: String,
-        @SerializedName("original_title")
+        @SerializedName("title")
         val title: String,
         @SerializedName("release_date")
         val date: String,
