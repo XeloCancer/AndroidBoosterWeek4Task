@@ -20,17 +20,43 @@
             app:layout_scrollFlags="scroll|enterAlways"
             tools:context=".MainActivity">
 
-            <Button
-                android:id="@+id/callAPIbtn"
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/button_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                android:text="I am a button"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="12dp"
+                app:singleSelection="true"
+                app:checkedButton="@id/most_popular_button"
+                app:selectionRequired="true"
+                app:layout_constraintStart_toEndOf="@id/logo"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="@id/logo"
+                app:layout_constraintBottom_toBottomOf="@id/logo">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/most_popular_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:background="@null"
+                    android:text="@string/most_popular"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_group_color"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/top_rated_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:background="@null"
+                    android:text="@string/top_rated"
+                    android:textAllCaps="false"
+                    android:textColor="@color/button_group_color"/>
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
 
 
             <ImageView
@@ -53,7 +79,12 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
-
+    <ProgressBar
+        android:id="@+id/loading_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

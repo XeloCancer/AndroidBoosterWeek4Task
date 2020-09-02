@@ -1,6 +1,8 @@
 package com.useless.boosterapp4.network
 
 import android.os.CountDownTimer
+import android.view.View
+import android.widget.ProgressBar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,12 +28,14 @@ object LocalRepo {
     private lateinit var movieListData: MovieList
     private lateinit var movieData: Movie
 
-    fun requestMovieList(callback: MovieListCallback){
+    fun requestMovieList(callback: MovieListCallback, loadingBar : ProgressBar){
         if (this::movieListData.isInitialized) {
 
             callback.onMovieListReady(movieListData)
             return
         }
+
+        loadingBar.visibility = View.VISIBLE
         apiServices.doGetMoviesList(apiKey)
             .enqueue(object : Callback<MovieList> {
 
@@ -43,6 +47,7 @@ object LocalRepo {
                     if (response.isSuccessful) {
                         movieListData = response.body()!!
                         callback.onMovieListReady(movieListData)
+                        loadingBar.visibility = View.GONE
                     } else if (response.code() in 400..404) {
 
                         val msg = "The movies didn't load properly from the API ${response.code()}"
