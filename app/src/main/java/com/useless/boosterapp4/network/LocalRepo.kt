@@ -30,11 +30,18 @@ object LocalRepo {
     private const val apiKey = "6637f7d017283c784ff6746c01f71453"
     private var lastUsedFun: Int = 4
     private lateinit var movieListData: MovieList
+    private lateinit var prevMovieListData: MovieList
     private lateinit var movieData: Movie
 
+    fun requestLastFun(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean){
+        when(lastUsedFun){
+            0 -> requestMovieList(callback, loadingBar, page, addInfo)
+            2 -> requestTopRatedMovieList(callback, loadingBar, page, addInfo)
+        }
+    }
 
-    fun requestMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int){
-        if (this::movieListData.isInitialized && lastUsedFun == 0) {
+    fun requestMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean = false){
+        if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
 
             callback.onMovieListReady(movieListData)
             return
@@ -51,7 +58,14 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
-                        movieListData = response.body()!!
+                        if(!addInfo){
+                            movieListData = response.body()!!
+                        }else if(addInfo){
+                            prevMovieListData = movieListData
+                            movieListData = response.body()!!
+                            prevMovieListData.list.addAll(movieListData.list)
+                            movieListData.list = prevMovieListData.list
+                        }
                         callback.onMovieListReady(movieListData)
                         loadingBar.visibility = View.GONE
                     } else if (response.code() in 400..404) {
@@ -102,8 +116,8 @@ object LocalRepo {
             })
         }
 
-    fun requestTopRatedMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int){
-        if (this::movieListData.isInitialized && lastUsedFun == 2) {
+    fun requestTopRatedMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean = false){
+        if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
 
             callback.onMovieListReady(movieListData)
             return
@@ -120,7 +134,14 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
-                        movieListData = response.body()!!
+                        if(!addInfo){
+                            movieListData = response.body()!!
+                        }else if(addInfo){
+                            prevMovieListData = movieListData
+                            movieListData = response.body()!!
+                            prevMovieListData.list.addAll(movieListData.list)
+                            movieListData.list = prevMovieListData.list
+                        }
                         callback.onMovieListReady(movieListData)
                         loadingBar.visibility = View.GONE
                     } else if (response.code() in 400..404) {

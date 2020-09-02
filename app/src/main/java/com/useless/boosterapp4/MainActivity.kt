@@ -100,8 +100,8 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback{
                     val pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
 
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            page.inc()
-                            LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
+                            page++
+                            LocalRepo.requestLastFun(this@MainActivity, loading_bar, page, true)
                         }
                 }
             }
