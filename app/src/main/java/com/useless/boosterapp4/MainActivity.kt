@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback, RecyclerA
 
 
 
-
+/*
     fun prevPage(pageNum: Int){
         if(pageNum == 1){
             Toast.makeText(applicationContext, "You're already at the first page", Toast.LENGTH_SHORT).show()
@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback, RecyclerA
             //TODO: call API with same data but query page = pageNum - 1
         }
     }
-
+*/
     override fun onMovieListReady(movieData: MovieList) {
         Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
         movie_list_recycler_view.adapter = RecyclerAdapter(movieData, movieData.list, this@MainActivity)
