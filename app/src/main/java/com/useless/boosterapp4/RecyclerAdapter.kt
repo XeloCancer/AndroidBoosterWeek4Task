@@ -1,11 +1,12 @@
 package com.useless.boosterapp4
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.useless.boosterapp4.network.Movie
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.useless.boosterapp4.MovieViewHolder
 import com.useless.boosterapp4.network.MovieList
 
 class RecyclerAdapter (private val movieListData: MovieList?, private val listOfMovies: List<Movie>?, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
@@ -23,6 +24,22 @@ class RecyclerAdapter (private val movieListData: MovieList?, private val listOf
         holder.rating.text = "${(movie.voteAvg.toDouble() * 10).toInt()}%"
         holder.ratingBar.progress = (movie.voteAvg.toDouble() * 10).toInt()
         System.out.println("Position is $position, and Item count is $itemCount")
+
+        //Creates a bundle of data to pass to the activity
+        val bundle : Bundle = Bundle()
+        bundle.putString("poster_path", movie.posterPath)
+        bundle.putString("title", movie.title)
+        bundle.putString("release_date", movie.date)
+        bundle.putString("language", movie.lang)
+        bundle.putString("overview", movie.overview)
+
+        //OnClickListener responsible for sending data to the other activity
+        holder.itemView.setOnClickListener {
+            val intent : Intent = Intent(holder.itemView.context, MovieDetails::class.java)
+            intent.putExtras(bundle)
+            holder.itemView.context.startActivity(intent)
+        }
+
         if(position == itemCount - 1){
 
             if (movieListData != null) {

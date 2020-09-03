@@ -4,9 +4,6 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.useless.boosterapp4.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

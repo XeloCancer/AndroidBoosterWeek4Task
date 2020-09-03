@@ -6,7 +6,6 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.movie_recycler_item.view.*
-import retrofit2.Retrofit
 
 class MovieViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
 
