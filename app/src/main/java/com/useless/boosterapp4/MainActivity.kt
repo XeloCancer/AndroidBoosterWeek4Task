@@ -118,12 +118,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback, RecyclerA
                 }
             }
         })*/
-
     }
-
-
-
-
     fun prevPage(pageNum: Int){
         if(pageNum == 1){
             Toast.makeText(applicationContext, "You're already at the first page", Toast.LENGTH_SHORT).show()
