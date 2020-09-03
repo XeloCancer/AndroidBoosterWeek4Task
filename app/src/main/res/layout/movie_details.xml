@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/movie_details_background_gradient">
+
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="@id/logo_details"
+        app:layout_constraintBottom_toBottomOf="@id/logo_details"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/back_button" />
+
+    <ImageView
+        android:id="@+id/logo_details"
+        android:layout_width="48dp"
+        android:layout_height="40dp"
+        android:layout_margin="24dp"
+        android:src="@drawable/the_movie_database_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/app_logo" />
+
+    <ImageView
+        android:id="@+id/movie_poster_detail"
+        android:layout_width="122dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:padding="2dp"
+        android:background="#1B4C80"
+        tools:src="@drawable/inception"
+        android:contentDescription="@string/movie_poster"
+        android:adjustViewBounds="true"
+        android:elevation="2dp"
+        app:layout_constraintTop_toBottomOf="@id/logo_details"
+        app:layout_constraintStart_toStartOf="@id/back_button"/>
+
+    <TextView
+        android:id="@+id/movie_name"
+        style="@style/MovieDataTextViewStyle"
+        tools:text="Title: Inception"
+        app:layout_constraintStart_toEndOf="@id/movie_poster_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/movie_poster_detail"
+        app:layout_constraintBottom_toTopOf="@id/release_date"/>
+
+    <TextView
+        android:id="@+id/release_date"
+        style="@style/MovieDataTextViewStyle"
+        tools:text="Release Date: 14 July 2010"
+        app:layout_constraintStart_toEndOf="@id/movie_poster_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/movie_name"
+        app:layout_constraintBottom_toTopOf="@id/languages"/>
+
+    <TextView
+        android:id="@+id/languages"
+        style="@style/MovieDataTextViewStyle"
+        tools:text="Languages: English"
+        app:layout_constraintStart_toEndOf="@id/movie_poster_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/release_date"
+        app:layout_constraintBottom_toBottomOf="@id/movie_poster_detail"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:scrollbarSize="2dp"
+        app:layout_constraintTop_toBottomOf="@id/movie_poster_detail"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.codesgood.views.JustifiedTextView
+            android:id="@+id/movie_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious."
+            android:textSize="16sp"
+            android:textColor="#9A9A9A"/>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
