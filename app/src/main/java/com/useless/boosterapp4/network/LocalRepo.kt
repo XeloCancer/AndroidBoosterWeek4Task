@@ -4,6 +4,8 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.useless.boosterapp4.utils.hide
+import com.useless.boosterapp4.utils.show
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,7 +47,7 @@ object LocalRepo {
         }
         lastUsedFun = 0
 
-        loadingBar.visibility = View.VISIBLE
+        loadingBar.show()
         apiServices.doGetMoviesList(apiKey, page = page)
             .enqueue(object : Callback<MovieList> {
 
@@ -64,7 +66,7 @@ object LocalRepo {
                             movieListData.list = prevMovieListData.list
                         }
                         callback.onMovieListReady(movieListData)
-                        loadingBar.visibility = View.GONE
+                        loadingBar.hide()
                     } else if (response.code() in 400..404) {
 
                         val msg = "The movies didn't load properly from the API ${response.code()}"
@@ -121,7 +123,7 @@ object LocalRepo {
         }
         lastUsedFun = 2
 
-        loadingBar.visibility = View.VISIBLE
+        loadingBar.show()
         apiServices.doGetMovieByRate(apiKey, page = page)
             .enqueue(object : Callback<MovieList> {
 
@@ -140,7 +142,7 @@ object LocalRepo {
                             movieListData.list = prevMovieListData.list
                         }
                         callback.onMovieListReady(movieListData)
-                        loadingBar.visibility = View.GONE
+                        loadingBar.hide()
                     } else if (response.code() in 400..404) {
 
                         val msg = "The movies didn't load properly from the API ${response.code()}"
