@@ -7,18 +7,21 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.RecyclerAdapter
 import com.useless.boosterapp4.network.LocalRepo
+import com.useless.boosterapp4.network.LocalRepo.requestMovieList
 import com.useless.boosterapp4.network.MovieList
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     RecyclerAdapter.PageControl {
 
-    private val mainViewModel : MovieViewModel by viewModels()
+    private val movieViewModel : MovieViewModel by viewModels()
 
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
@@ -48,8 +51,17 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        movieViewModel.movieLiveData.observe(this, {
+            onMovieListReady(it)
+        })
 
-        layoutManager = GridLayoutManager(this, 2)
+        movieViewModel.onError.observe(this, {
+            onMovieListError(it)
+        })
+
+        movieViewModel.loadMovieData(page)
+
+           layoutManager = GridLayoutManager(this, 2)
 
         movie_list_recycler_view.layoutManager = layoutManager
 
@@ -61,14 +73,12 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
             )
 
         //TODO To call data on app launch. There is definitely a better way to do this so if you have ideas, please do it
-        LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
 
         //Responsible for handling changes to button clicks
         button_group.addOnButtonCheckedListener { group, checkedId, isChecked ->
             page = 1
             when(group.checkedButtonId){
                 most_popular_button.id -> {
-                    LocalRepo.requestMovieList(this@MainActivity, loading_bar, page)
 
                     //To animate color change for different buttons
                     colorAnimLightMostPopular = ObjectAnimator.ofInt(
@@ -91,7 +101,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
                 top_rated_button.id -> {
 
-                    LocalRepo.requestTopRatedMovieList(this@MainActivity, loading_bar, page)
+                    LocalRepo.requestTopRatedMovieList(this@MainActivity, page)
 
                     //To animate color change for different buttons
                     colorAnimLightTopRated = ObjectAnimator.ofInt(

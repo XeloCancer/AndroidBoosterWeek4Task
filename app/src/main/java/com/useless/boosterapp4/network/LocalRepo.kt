@@ -37,12 +37,12 @@ object LocalRepo {
     fun requestLastFun(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean){
 
         when(lastUsedFun){
-            0 -> requestMovieList( loadingBar, page, addInfo)
-            2 -> requestTopRatedMovieList(callback, loadingBar, page, addInfo)
+            0 -> requestMovieList(callback,  page, addInfo)
+            2 -> requestTopRatedMovieList(callback, page, addInfo)
         }
     }
 
-    fun requestMovieList(loadingBar : ProgressBar, page : Int, addInfo: Boolean = false) : LiveData<Movie> {
+    fun requestMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false) {
 
         val movieResponse: MutableLiveData<Movie> = MutableLiveData()
 
@@ -53,7 +53,7 @@ object LocalRepo {
         //     }
         lastUsedFun = 0
 
-        loadingBar.show()
+     //   loadingBar.show()
         apiServices.doGetMoviesList(apiKey, page = page)
             .enqueue(object : Callback<MovieList> {
 
@@ -66,26 +66,25 @@ object LocalRepo {
                         if (!addInfo) {
                             movieListData = response.body()!!
                         } else if (addInfo) {
-                            prevMovieListData = movieListData
+                       //     prevMovieListData = movieListData
                             movieListData = response.body()!!
-                            prevMovieListData.list.addAll(movieListData.list)
-                            movieListData.list = prevMovieListData.list
+                        //    prevMovieListData.list.addAll(movieListData.list)
+                        //    movieListData.list = prevMovieListData.list
                         }
-                        movieResponse.value = movieData
-                        //              callback.onMovieListReady(movieListData)
-                        loadingBar.hide()
+                        callback.onMovieListReady(movieListData)
+                    //    loadingBar.hide()
                     }
-                    //       else if (response.code() in 400..404) {
+                           else if (response.code() in 400..404) {
 
-                    //          val msg = "The movies didn't load properly from the API ${response.code()}"
-                    //          callback.onMovieListError(msg)
-                    //  }
+                             val msg = "The movies didn't load properly from the API ${response.code()}"
+                              callback.onMovieListError(msg)
+                      }
                 }
 
                 override fun onFailure(call: Call<MovieList>, t: Throwable) {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
-                    movieResponse.value = movieData
+                    callback.onMovieListError(msg)
                 }
             })
 
@@ -122,7 +121,7 @@ object LocalRepo {
             })
         }
 
-    fun requestTopRatedMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean = false){
+    fun requestTopRatedMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false){
         if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
 
             callback.onMovieListReady(movieListData)
@@ -130,7 +129,7 @@ object LocalRepo {
         }
         lastUsedFun = 2
 
-        loadingBar.show()
+       // loadingBar.show()
         apiServices.doGetMovieByRate(apiKey, page = page)
             .enqueue(object : Callback<MovieList> {
 
@@ -149,7 +148,7 @@ object LocalRepo {
                             movieListData.list = prevMovieListData.list
                         }
                         callback.onMovieListReady(movieListData)
-                        loadingBar.hide()
+                     //   loadingBar.hide()
                     } else if (response.code() in 400..404) {
 
                         val msg = "The movies didn't load properly from the API ${response.code()}"
