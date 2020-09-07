@@ -44,13 +44,11 @@ object LocalRepo {
 
     fun requestMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false) {
 
-        val movieResponse: MutableLiveData<Movie> = MutableLiveData()
+            if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
 
-        //    if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
-
-        //   callback.onMovieListReady(movieListData)
-        //      return
-        //     }
+           callback.onMovieListReady(movieListData)
+              return
+             }
         lastUsedFun = 0
 
      //   loadingBar.show()
@@ -66,10 +64,10 @@ object LocalRepo {
                         if (!addInfo) {
                             movieListData = response.body()!!
                         } else if (addInfo) {
-                       //     prevMovieListData = movieListData
+                            prevMovieListData = movieListData
                             movieListData = response.body()!!
-                        //    prevMovieListData.list.addAll(movieListData.list)
-                        //    movieListData.list = prevMovieListData.list
+                            prevMovieListData.list.addAll(movieListData.list)
+                            movieListData.list = prevMovieListData.list
                         }
                         callback.onMovieListReady(movieListData)
                     //    loadingBar.hide()

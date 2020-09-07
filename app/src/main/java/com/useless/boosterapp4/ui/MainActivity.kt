@@ -21,7 +21,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     RecyclerAdapter.PageControl {
 
-    private val movieViewModel : MovieViewModel by viewModels()
+
 
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
@@ -47,19 +47,24 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
             LocalRepo.requestLastFun(this@MainActivity, loading_bar, page, true)
         }
     }
+    private val movieViewModel : MovieViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+     //   requestMovieList(this@MainActivity, page)
+
         movieViewModel.movieLiveData.observe(this, {
             onMovieListReady(it)
         })
 
-        movieViewModel.onError.observe(this, {
+        movieViewModel.onError.observe(this,{
             onMovieListError(it)
         })
 
         movieViewModel.loadMovieData(page)
+
 
            layoutManager = GridLayoutManager(this, 2)
 
@@ -79,7 +84,17 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
             page = 1
             when(group.checkedButtonId){
                 most_popular_button.id -> {
+                    movieViewModel.movieLiveData.observe(this, {
+                        onMovieListReady(it)
+                    })
 
+                    movieViewModel.onError.observe(this,{
+                        onMovieListError(it)
+                    })
+
+                    movieViewModel.loadMovieData(page)
+
+            //    requestMovieList(this@MainActivity, page)
                     //To animate color change for different buttons
                     colorAnimLightMostPopular = ObjectAnimator.ofInt(
                         most_popular_button,

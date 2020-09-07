@@ -10,12 +10,12 @@ import com.useless.boosterapp4.network.MovieList
 class MovieViewModel : ViewModel() , LocalRepo.MovieListCallback {
 
    private  val _movieLiveData: MutableLiveData<MovieList>
-            by lazy { MutableLiveData() }
+            by lazy { MutableLiveData<MovieList>() }
     val movieLiveData : LiveData<MovieList>
     get() = _movieLiveData
 
     private val _onError : MutableLiveData<String>
-    by lazy { MutableLiveData()}
+    by lazy { MutableLiveData<String>()}
     val onError : LiveData<String>
     get() = _onError
 
@@ -23,14 +23,14 @@ class MovieViewModel : ViewModel() , LocalRepo.MovieListCallback {
 
     private var currentPage = 1
 
-    fun loadMovieData(page: Int = 1) {
+    fun loadMovieData(page: Int) {
         if (page == currentPage && this::movieListData.isInitialized){
             _movieLiveData.value = movieListData
         return
     }
-//    if (page == 1)
-//        LocalRepo.requestMovieList(this, currentPage)
-//
+        if (page == 1)
+       LocalRepo.requestMovieList(this, currentPage)
+
     }
 
     override fun onMovieListReady(movieData: MovieList) {
