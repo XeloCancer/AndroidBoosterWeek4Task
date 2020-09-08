@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".ui.MainActivity"
     android:background="#030303">
 
 
@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:background="#0D253F"
             app:layout_scrollFlags="scroll|enterAlways"
-            tools:context=".MainActivity">
+            tools:context=".ui.MainActivity">
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/button_group"

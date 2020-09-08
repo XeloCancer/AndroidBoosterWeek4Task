@@ -4,6 +4,10 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.useless.boosterapp4.utils.hide
+import com.useless.boosterapp4.utils.show
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,21 +35,23 @@ object LocalRepo {
     private lateinit var movieData: Movie
 
     fun requestLastFun(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean){
+
         when(lastUsedFun){
-            0 -> requestMovieList(callback, loadingBar, page, addInfo)
-            2 -> requestTopRatedMovieList(callback, loadingBar, page, addInfo)
+            0 -> requestMovieList(callback,  page, addInfo)
+            2 -> requestTopRatedMovieList(callback, page, addInfo)
         }
     }
 
-    fun requestMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean = false){
-        if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
+    fun requestMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false) {
 
-            callback.onMovieListReady(movieListData)
-            return
-        }
+            if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
+
+           callback.onMovieListReady(movieListData)
+              return
+             }
         lastUsedFun = 0
 
-        loadingBar.visibility = View.VISIBLE
+     //   loadingBar.show()
         apiServices.doGetMoviesList(apiKey, page = page)
             .enqueue(object : Callback<MovieList> {
 
@@ -55,21 +61,22 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
-                        if(!addInfo){
+                        if (!addInfo) {
                             movieListData = response.body()!!
-                        }else if(addInfo){
+                        } else if (addInfo) {
                             prevMovieListData = movieListData
                             movieListData = response.body()!!
                             prevMovieListData.list.addAll(movieListData.list)
                             movieListData.list = prevMovieListData.list
                         }
                         callback.onMovieListReady(movieListData)
-                        loadingBar.visibility = View.GONE
-                    } else if (response.code() in 400..404) {
-
-                        val msg = "The movies didn't load properly from the API ${response.code()}"
-                        callback.onMovieListError(msg)
+                    //    loadingBar.hide()
                     }
+                           else if (response.code() in 400..404) {
+
+                             val msg = "The movies didn't load properly from the API ${response.code()}"
+                              callback.onMovieListError(msg)
+                      }
                 }
 
                 override fun onFailure(call: Call<MovieList>, t: Throwable) {
@@ -77,11 +84,10 @@ object LocalRepo {
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
                 }
-
-
             })
 
-    }
+       }
+
 
     fun requestMovieData(callback: MovieCallback, movieID: Int){
         if (this::movieData.isInitialized && lastUsedFun == 1) {
@@ -113,7 +119,7 @@ object LocalRepo {
             })
         }
 
-    fun requestTopRatedMovieList(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean = false){
+    fun requestTopRatedMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false){
         if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
 
             callback.onMovieListReady(movieListData)
@@ -121,7 +127,7 @@ object LocalRepo {
         }
         lastUsedFun = 2
 
-        loadingBar.visibility = View.VISIBLE
+       // loadingBar.show()
         apiServices.doGetMovieByRate(apiKey, page = page)
             .enqueue(object : Callback<MovieList> {
 
@@ -140,7 +146,7 @@ object LocalRepo {
                             movieListData.list = prevMovieListData.list
                         }
                         callback.onMovieListReady(movieListData)
-                        loadingBar.visibility = View.GONE
+                     //   loadingBar.hide()
                     } else if (response.code() in 400..404) {
 
                         val msg = "The movies didn't load properly from the API ${response.code()}"
