@@ -47,5 +47,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'com.codesgood:justifiedtextview:1.1.0'
+    implementation"androidx.room:room-runtime:2.2.5"
 
 }
