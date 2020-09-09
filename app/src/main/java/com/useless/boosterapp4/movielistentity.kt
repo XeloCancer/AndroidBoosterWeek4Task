@@ -3,25 +3,25 @@ package com.useless.boosterapp4
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-@Entity
+@Entity(tableName="movielist")
 data class movielistentity (
     @PrimaryKey
     val id: Int,
-    @SerializedName("poster_path")
+    //@SerializedName("poster_path")
     val posterPath: String?,
-    @SerializedName("original_language")
+    //@SerializedName("original_language")
     val lang: String,
-    @SerializedName("title")
+    //@SerializedName("title")
     val title: String,
-    @SerializedName("release_date")
+    //@SerializedName("release_date")
     val date: String,
-    @SerializedName("vote_average")
+    //@SerializedName("vote_average")
     val voteAvg: Number,
-    @SerializedName("vote_count")
+    //@SerializedName("vote_count")
     val voteCnt: Int,
-    @SerializedName("overview")
+    //@SerializedName("overview")
     val overview : String,
     val totalPages: Int,
-    @SerializedName("page")
+    //@SerializedName("page")
     val page: Int
 )

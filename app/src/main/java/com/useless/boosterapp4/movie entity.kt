@@ -8,7 +8,7 @@ data class `movieentity` (
     @PrimaryKey
     //@SerializedName("id")
     val id: Int,
-   // @SerializedName("poster_path")
+    //@SerializedName("poster_path")
     val posterPath: String?,
     //@SerializedName("original_language")
     val lang: String,
@@ -23,6 +23,4 @@ data class `movieentity` (
     //@SerializedName("overview")
     val overview : String,
 )
-
-
 
