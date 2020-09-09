@@ -1,23 +1,15 @@
 package com.useless.boosterapp4
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
-<<<<<<< HEAD
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import com.useless.boosterapp4.network.Movie
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.squareup.picasso.Picasso
-import com.useless.boosterapp4.MovieViewHolder
-import com.useless.boosterapp4.R
-import com.useless.boosterapp4.network.MovieDetails
-import kotlinx.android.synthetic.main.movie_details.view.*
-import kotlinx.android.synthetic.main.movie_recycler_item.view.*
+import com.useless.boosterapp4.network.MovieList
 
-class RecyclerAdapter (private val movies: List<Movie>?): RecyclerView.Adapter<MovieViewHolder>(){
+class RecyclerAdapter (private val movieListData: MovieList?, private val listOfMovies: List<Movie>?, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -26,65 +18,42 @@ class RecyclerAdapter (private val movies: List<Movie>?): RecyclerView.Adapter<M
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = movies?.get(position)
+        val movie = listOfMovies?.get(position)
         Picasso.get().load("https://image.tmdb.org/t/p/w500/${movie?.posterPath}").into(holder.moviePicture)
+        holder.movieTitle.text = movie!!.title
+        holder.rating.text = "${(movie.voteAvg.toDouble() * 10).toInt()}%"
+        holder.ratingBar.progress = (movie.voteAvg.toDouble() * 10).toInt()
+        System.out.println("Position is $position, and Item count is $itemCount")
 
-    }
+        //Creates a bundle of data to pass to the activity
+        val bundle : Bundle = Bundle()
+        bundle.putString("poster_path", movie.posterPath)
+        bundle.putString("title", movie.title)
+        bundle.putString("release_date", movie.date)
+        bundle.putString("language", movie.lang)
+        bundle.putString("overview", movie.overview)
 
-    override fun getItemCount(): Int {
-        return movies?.size ?: 0
-    }
-    class RecyclerAdapter    (
-        var movies: MutableList<Movie>,
-        val onMovieClick: (movie: Movie) -> Unit) : RecyclerView.Adapter<RecyclerAdapter.MovieDetailsHolder>(){
-        inner class MovieDetailsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        //OnClickListener responsible for sending data to the other activity
+        holder.itemView.setOnClickListener {
+            val intent : Intent = Intent(holder.itemView.context, MovieDetails::class.java)
+            intent.putExtras(bundle)
+            holder.itemView.context.startActivity(intent)
+        }
 
-            private val poster: ImageView = itemView.findViewById(R.id.movie_poster)
-            fun bind(movie: Movie) {
-                Glide.with(itemView)
-                    .load("https://image.tmdb.org/t/p/w342${movie.posterPath}")
-                    .transform(CenterCrop())
-                    .into(poster)
-                itemView.setOnClickListener { onMovieClick.invoke(movie) }
+        if(position == itemCount - 1){
+
+            if (movieListData != null) {
+                responseInterface.nextPage(movieListData)
             }
         }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieDetailsHolder {
-            TODO("Not yet implemented")
-        }
-
-        override fun getItemCount(): Int {
-            TODO("Not yet implemented")
-        }
-
-        override fun onBindViewHolder(holder: MovieDetailsHolder, position: Int) {
-            TODO("Not yet implemented")
-        }
-
-
-=======
-import android.view.ViewGroup
-import android.widget.ImageView
-import com.useless.boosterapp4.network.Movie
-import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Retrofit
-
-class RecyclerAdapter (private val listOfMovies: List<Movie>): RecyclerView.Adapter<MovieViewHolder>(){
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val noteView = layoutInflater.inflate(R.layout.movie_recycler_item, parent, false)
-        return MovieViewHolder(noteView)
-    }
-
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = listOfMovies[position]
-        holder.moviePicture?.setImageResource(movie.moviePicture)
     }
 
     override fun getItemCount(): Int {
-        return listOfMovies.size
->>>>>>> origin/Lotfy_Recycler_branch
+        return listOfMovies?.size ?: 0
+    }
+
+    interface PageControl{
+        fun nextPage(movieListData: MovieList)
     }
 }
 
