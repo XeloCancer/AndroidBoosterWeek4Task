@@ -9,6 +9,8 @@ val movielist: List<MovieData>,
 )
 
 data class MovieData(
+    @SerializedName ("id")
+    val id :Int,
     @SerializedName ("posterPath")
     val posterPath: String,
     @SerializedName ("lang")

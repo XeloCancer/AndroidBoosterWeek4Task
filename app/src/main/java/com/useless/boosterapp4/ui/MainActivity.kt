@@ -184,10 +184,6 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
 
 
-    private fun bindMovieData(movies: List<Movie>) {
-        movie_title.show()
-        movie_list_recycler_view.adapter = RecyclerAdapter(movies)
 
-    }
 
 }

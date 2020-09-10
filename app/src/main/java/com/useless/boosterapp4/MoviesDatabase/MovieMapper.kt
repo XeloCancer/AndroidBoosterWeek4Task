@@ -16,7 +16,7 @@ class MovieMapper {
           title = it.movie_info.first().movie_title
           overview = it.movie_info.first().overview
       }
-          movies.add(Movie(it.posterPath, it.Lang, title, overview, it.voteAvg, it.voteCnt))
+          movies.add(Movie(it.posterPath, it.Lang, title, it.date, it.voteAvg, it.voteCnt, overview, it.id))
       }
         return movies
         }
