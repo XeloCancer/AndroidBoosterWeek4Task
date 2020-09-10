@@ -16,6 +16,7 @@ import com.useless.boosterapp4.network.LocalRepo
 import com.useless.boosterapp4.network.LocalRepo.requestMovieList
 import com.useless.boosterapp4.network.Movie
 import com.useless.boosterapp4.network.MovieList
+import com.useless.boosterapp4.utils.show
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.movie_details.*
 import kotlinx.android.synthetic.main.movie_recycler_item.*
@@ -74,12 +75,6 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
         movie_list_recycler_view.layoutManager = layoutManager
 
-        movie_list_recycler_view.adapter =
-            RecyclerAdapter(
-                null,
-                null,
-                this@MainActivity
-            )
 
         //TODO To call data on app launch. There is definitely a better way to do this so if you have ideas, please do it
 
@@ -90,6 +85,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
                 most_popular_button.id -> {
                     movieViewModel.movieLiveData.observe(this, {
                         onMovieListReady(it)
+
                     })
 
                     movieViewModel.onError.observe(this,{
@@ -188,6 +184,10 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
 
 
+    private fun bindMovieData(movies: List<Movie>) {
+        movie_title.show()
+        movie_list_recycler_view.adapter = RecyclerAdapter(movies)
 
+    }
 
 }

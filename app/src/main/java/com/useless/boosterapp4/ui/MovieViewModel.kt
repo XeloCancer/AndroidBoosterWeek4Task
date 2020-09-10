@@ -21,6 +21,11 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
     val onError : LiveData<String>
     get() = _onError
 
+    private val _movieDetail: MutableLiveData <List <Movie>>
+            by lazy { MutableLiveData < List<Movie> > () }
+    val movieDetail: MutableLiveData<List<Movie>>
+        get() = _movieDetail
+
     private lateinit var movieListData: MovieList
 
     private var currentPage = 1
@@ -47,12 +52,12 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
         _onError.value = errorMsg
     }
 
-    override fun onMovieReady(movieData: Movie) {
-        TODO("Not yet implemented")
+    override fun onMovieReady(movies: List<Movie>) {
+      _movieDetail.value = movies
     }
 
     override fun onMovieError(errorMsg: String) {
-        TODO("Not yet implemented")
+        _onError.value = errorMsg
     }
 
 

@@ -39,6 +39,37 @@ object LocalRepo {
         }
     }
 
+    private lateinit var mDatabase: MDatabase
+    private val mapper by lazy { MovieMapper() }
+
+    fun requestMovieData(callback: MovieCallback, movieID: Int){
+
+        lastUsedFun = 0
+        apiServices.doGetMovieByID(movieID, apiKey)
+            .enqueue(object : Callback<MovieResponse> {
+
+                override fun onResponse(
+                    call: Call<MovieResponse>,
+                    response: Response<MovieResponse>
+                ) {
+                    println("OnResponseCalled")
+                    if (response.isSuccessful) {
+                        val movieDetail  = mapper.mapToMovieUi(response.body()!!)
+                        mDatabase.getMovieDao().addMovies(movieDetail)
+                        callback.onMovieReady(movieDetail)
+                    } else if (response.code() in 400..404) {
+                        val msg = "The movies didn't load properly from the API"
+                        callback.onMovieError(msg)
+                    }
+                }
+                override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                    t.printStackTrace()
+                    val msg = "Error while getting movie data"
+                    callback.onMovieError(msg)
+                }
+            })
+    }
+
     fun requestMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false) {
 
         if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
@@ -46,7 +77,7 @@ object LocalRepo {
             callback.onMovieListReady(movieListData)
             return
         }
-        lastUsedFun = 0
+        lastUsedFun = 1
 
         //   loadingBar.show()
         apiServices.doGetMoviesList(apiKey, page = page)
@@ -85,36 +116,7 @@ object LocalRepo {
 
     }
 
-    private lateinit var mDatabase: MDatabase
-    private val mapper by lazy { MovieMapper() }
 
-    fun requestMovieData(callback: MovieCallback, movieID: Int){
-
-        lastUsedFun = 1
-        apiServices.doGetMovieByID(movieID, apiKey)
-            .enqueue(object : Callback<MovieResponse> {
-
-                override fun onResponse(
-                    call: Call<MovieResponse>,
-                    response: Response<MovieResponse>
-                ) {
-                    println("OnResponseCalled")
-                    if (response.isSuccessful) {
-                        val movie = mapper.mapToMovieUi(response.body()!!)
-                        mDatabase.getMovieDao().addMovies(movie)
-                        callback.onMovieReady(movie)
-                    } else if (response.code() in 400..404) {
-                        val msg = "The movies didn't load properly from the API"
-                        callback.onMovieError(msg)
-                    }
-                }
-                override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                    t.printStackTrace()
-                    val msg = "Error while getting movie data"
-                    callback.onMovieError(msg)
-                }
-            })
-    }
 
     fun requestTopRatedMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false){
         if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
@@ -171,7 +173,7 @@ object LocalRepo {
     }
 
     interface MovieCallback{
-        fun onMovieReady(movieData: Movie)
+        fun onMovieReady(movies: List<Movie>)
         fun onMovieError(errorMsg: String)
     }
 
