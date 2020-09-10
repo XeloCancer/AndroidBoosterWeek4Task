@@ -1,17 +1,11 @@
 package com.useless.boosterapp4.network
 
 import android.content.Context
-import android.os.CountDownTimer
-import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.useless.boosterapp4.MoviesDatabase.MDatabase
 import com.useless.boosterapp4.MoviesDatabase.MovieMapper
 import com.useless.boosterapp4.remote.MovieResponse
-import com.useless.boosterapp4.utils.hide
-import com.useless.boosterapp4.utils.show
+import com.useless.boosterapp4.ui.MovieViewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,7 +13,6 @@ import retrofit2.Response
 object LocalRepo {
     /*
         var seconds: Int = 0
-
         private val timer = object: CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 seconds = (millisUntilFinished / 1000).toInt()
@@ -96,10 +89,7 @@ object LocalRepo {
     private val mapper by lazy { MovieMapper() }
 
     fun requestMovieData(callback: MovieCallback, movieID: Int){
-        if (this::movieData.isInitialized && lastUsedFun == 1) {
-            callback.onMovieReady(movieData)
-            return
-        }
+
         lastUsedFun = 1
         apiServices.doGetMovieByID(movieID, apiKey)
             .enqueue(object : Callback<MovieResponse> {
@@ -110,9 +100,9 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
-                        val moviee = mapper.mapToMovieUi(response.body()!!)
-                        mDatabase.getMovieDao().addMovies(moviee)
-                        callback.onMovieReady(moviee)
+                        val movie = mapper.mapToMovieUi(response.body()!!)
+                        mDatabase.getMovieDao().addMovies(movie)
+                        callback.onMovieReady(movie)
                     } else if (response.code() in 400..404) {
                         val msg = "The movies didn't load properly from the API"
                         callback.onMovieError(msg)
@@ -181,7 +171,9 @@ object LocalRepo {
     }
 
     interface MovieCallback{
-        fun onMovieReady(mve: Movie)
+        fun onMovieReady(movieData: Movie)
         fun onMovieError(errorMsg: String)
     }
+
+
 }

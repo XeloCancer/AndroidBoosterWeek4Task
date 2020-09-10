@@ -14,8 +14,11 @@ import com.useless.boosterapp4.R
 import com.useless.boosterapp4.RecyclerAdapter
 import com.useless.boosterapp4.network.LocalRepo
 import com.useless.boosterapp4.network.LocalRepo.requestMovieList
+import com.useless.boosterapp4.network.Movie
 import com.useless.boosterapp4.network.MovieList
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.movie_details.*
+import kotlinx.android.synthetic.main.movie_recycler_item.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
@@ -57,6 +60,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
         movieViewModel.movieLiveData.observe(this, {
             onMovieListReady(it)
+
         })
 
         movieViewModel.onError.observe(this,{
@@ -181,5 +185,9 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     override fun onMovieListError(errorMsg: String) {
         Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
     }
+
+
+
+
 
 }

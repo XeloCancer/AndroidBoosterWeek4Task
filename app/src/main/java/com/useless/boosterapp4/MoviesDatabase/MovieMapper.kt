@@ -12,6 +12,7 @@ class MovieMapper {
         var overview = ""
         if (movieResponse.movielist.isNotEmpty()) {
             overview = movieResponse.movielist.first().overview
+            title = movieResponse.movielist.first().movie_title
         }
         return Movie(
             movieResponse.movieData.posterPath, movieResponse.movieData.Lang,

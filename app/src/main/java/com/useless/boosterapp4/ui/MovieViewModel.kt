@@ -1,13 +1,15 @@
 package com.useless.boosterapp4.ui
 
-import android.widget.ProgressBar
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.useless.boosterapp4.network.LocalRepo
+import com.useless.boosterapp4.network.Movie
 import com.useless.boosterapp4.network.MovieList
 
-class MovieViewModel : ViewModel() , LocalRepo.MovieListCallback {
+class MovieViewModel (application: Application): AndroidViewModel(application) , LocalRepo.MovieListCallback,
+    LocalRepo.MovieCallback {
 
    private  val _movieLiveData: MutableLiveData<MovieList>
             by lazy { MutableLiveData<MovieList>() }
@@ -22,6 +24,9 @@ class MovieViewModel : ViewModel() , LocalRepo.MovieListCallback {
     private lateinit var movieListData: MovieList
 
     private var currentPage = 1
+    init {
+        LocalRepo.createDatabase(application)
+    }
 
     fun loadMovieData(page: Int) {
         if (page == currentPage && this::movieListData.isInitialized){
@@ -29,7 +34,7 @@ class MovieViewModel : ViewModel() , LocalRepo.MovieListCallback {
         return
     }
         if (page == 1)
-       LocalRepo.requestMovieList(this, currentPage)
+       LocalRepo.requestMovieData (this, currentPage)
 
     }
 
@@ -41,4 +46,14 @@ class MovieViewModel : ViewModel() , LocalRepo.MovieListCallback {
     override fun onMovieListError(errorMsg: String) {
         _onError.value = errorMsg
     }
+
+    override fun onMovieReady(movieData: Movie) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onMovieError(errorMsg: String) {
+        TODO("Not yet implemented")
+    }
+
+
 }

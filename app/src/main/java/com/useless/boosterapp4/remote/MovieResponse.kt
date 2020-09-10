@@ -9,7 +9,7 @@ val movie_title: String,
 @SerializedName("main")
 val movieData: MovieData,
 @SerializedName("movie")
-val movielist: List<movieinfo>,
+val movielist: List<Movieinfo>,
 )
 
 data class MovieData(
@@ -26,7 +26,9 @@ data class MovieData(
 
 )
 
-data class movieinfo(
+data class Movieinfo(
+    @SerializedName("title")
+    val movie_title: String,
     @SerializedName("overview")
     val overview: String
 )
