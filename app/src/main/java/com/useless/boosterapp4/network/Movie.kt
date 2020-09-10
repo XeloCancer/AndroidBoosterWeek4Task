@@ -1,24 +1,20 @@
 package com.useless.boosterapp4.network
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 //Re-check if we need anything else from Movie from the API, we already got the bare minimum for the design.
 
-class Movie(
-        @SerializedName("id")
-        val id: Int,
-        @SerializedName("poster_path")
-        val posterPath: String?,
-        @SerializedName("original_language")
-        val lang: String,
-        @SerializedName("title")
-        val title: String,
-        @SerializedName("release_date")
-        val date: String,
-        @SerializedName("vote_average")
+@Entity(tableName = "movies_table")
+data class Movie(
+        val posterPath: String ="",
+        val lang: String ="",
+        val title: String ="",
+        val date: String ="",
         val voteAvg: Number,
-        @SerializedName("vote_count")
         val voteCnt: Int,
-        @SerializedName("overview")
-        val overview : String,
-        ) {}
+        val overview : String ="",
+        @PrimaryKey
+        val id: Int = 123
+        )

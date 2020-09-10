@@ -9,11 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.network.MovieList
 
-class RecyclerAdapter (private val movieListData: MovieList?, private val listOfMovies: List<Movie>?, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
+class RecyclerAdapter (private val movieListData: MovieList?, private val listOfMovies: List<Movie>, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        val layoutInflater = LayoutInflater.from(parent.context)
+        val layoutInflater = LayoutInflater.from(parent. context)
         val movieListView = layoutInflater.inflate(R.layout.movie_recycler_item, parent, false)
         return MovieViewHolder(movieListView)
     }
