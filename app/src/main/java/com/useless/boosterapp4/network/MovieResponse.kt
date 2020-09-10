@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 //Re-check if we need anything else from Movie from the API, we already got the bare minimum for the design.
 
-data class Movie(
+data class MovieResponse(
         @SerializedName("id")
         val id: Int,
         @SerializedName("poster_path")
