@@ -1,11 +1,7 @@
 package com.useless.boosterapp4.network
 
-import android.content.Context
 import android.widget.ProgressBar
-import com.useless.boosterapp4.MoviesDatabase.MDatabase
-import com.useless.boosterapp4.MoviesDatabase.MovieMapper
-import com.useless.boosterapp4.remote.MovieResponse
-import com.useless.boosterapp4.ui.MovieViewModel
+import com.useless.boosterapp4.ui.Movie
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,6 +9,7 @@ import retrofit2.Response
 object LocalRepo {
     /*
         var seconds: Int = 0
+
         private val timer = object: CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 seconds = (millisUntilFinished / 1000).toInt()
@@ -29,55 +26,31 @@ object LocalRepo {
     private var lastUsedFun: Int = 4
     private lateinit var movieListData: MovieList
     private lateinit var prevMovieListData: MovieList
-    private lateinit var movieData: Movie
+    private lateinit var movieData: MovieResponse
+    private lateinit var listOfMovies: List<Movie>
+    private lateinit var movie: Movie
 
-    fun requestLastFun(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean){
+    fun requestLastFun(
+        callback: MovieListCallback,
+        loadingBar: ProgressBar,
+        page: Int,
+        addInfo: Boolean
+    ) {
 
-        when(lastUsedFun){
-            0 -> requestMovieList(callback,  page, addInfo)
+        when (lastUsedFun) {
+            0 -> requestMovieList(callback, page, addInfo)
             2 -> requestTopRatedMovieList(callback, page, addInfo)
         }
     }
 
-    private lateinit var mDatabase: MDatabase
-    private val mapper by lazy { MovieMapper() }
-
-    fun requestMovieData(callback: MovieCallback, movieID: Int){
-
-        lastUsedFun = 0
-        apiServices.doGetMovieByID(movieID, apiKey)
-            .enqueue(object : Callback<MovieResponse> {
-
-                override fun onResponse(
-                    call: Call<MovieResponse>,
-                    response: Response<MovieResponse>
-                ) {
-                    println("OnResponseCalled")
-                    if (response.isSuccessful) {
-                        val movieDetail  = mapper.mapToMovieUi(response.body()!!)
-                        mDatabase.getMovieDao().addMovies(movieDetail)
-                        callback.onMovieReady(movieDetail)
-                    } else if (response.code() in 400..404) {
-                        val msg = "The movies didn't load properly from the API"
-                        callback.onMovieError(msg)
-                    }
-                }
-                override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                    t.printStackTrace()
-                    val msg = "Error while getting movie data"
-                    callback.onMovieError(msg)
-                }
-            })
-    }
-
-    fun requestMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false) {
+    fun requestMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false) {
 
         if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
 
-            callback.onMovieListReady(movieListData)
+            callback.onMovieListReady(listOfMovies)
             return
         }
-        lastUsedFun = 1
+        lastUsedFun = 0
 
         //   loadingBar.show()
         apiServices.doGetMoviesList(apiKey, page = page)
@@ -91,16 +64,31 @@ object LocalRepo {
                     if (response.isSuccessful) {
                         if (!addInfo) {
                             movieListData = response.body()!!
+                            listOfMovies = movieListData.list.map {
+                                Movie(
+                                    it.id, it.posterPath, it.lang,
+                                    it.title, it.date, it.voteAvg,
+                                    it.voteCnt, it.overview, movieListData.page,
+                                    movieListData.totalPages
+                                )
+                            }
                         } else if (addInfo) {
                             prevMovieListData = movieListData
                             movieListData = response.body()!!
                             prevMovieListData.list.addAll(movieListData.list)
                             movieListData.list = prevMovieListData.list
+                            listOfMovies = movieListData.list.map {
+                                Movie(
+                                    it.id, it.posterPath, it.lang,
+                                    it.title, it.date, it.voteAvg,
+                                    it.voteCnt, it.overview, movieListData.page,
+                                    movieListData.totalPages
+                                )
+                            }
                         }
-                        callback.onMovieListReady(movieListData)
+                        callback.onMovieListReady(listOfMovies)
                         //    loadingBar.hide()
-                    }
-                    else if (response.code() in 400..404) {
+                    } else if (response.code() in 400..404) {
 
                         val msg = "The movies didn't load properly from the API ${response.code()}"
                         callback.onMovieListError(msg)
@@ -117,11 +105,53 @@ object LocalRepo {
     }
 
 
+    fun requestMovieData(callback: MovieCallback, movieID: Int) {
+        if (this::movieData.isInitialized && lastUsedFun == 1) {
+            movie = Movie(
+                movieData.id,
+                movieData.posterPath,
+                movieData.lang,
+                movieData.title,
+                movieData.date,
+                movieData.voteAvg,
+                movieData.voteCnt,
+                movieData.overview,
+                movieListData.page,
+                movieListData.totalPages
+            )
+            callback.onMovieReady(movie)
+            return
+        }
+        lastUsedFun = 1
+        apiServices.doGetMovieByID(movieID, apiKey)
+            .enqueue(object : Callback<MovieResponse> {
 
-    fun requestTopRatedMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false){
+                override fun onResponse(
+                    call: Call<MovieResponse>,
+                    response: Response<MovieResponse>
+                ) {
+                    println("OnResponseCalled")
+                    if (response.isSuccessful) {
+                        movieData = response.body()!!
+                        callback.onMovieReady(movie)
+                    } else if (response.code() in 400..404) {
+                        val msg = "The movies didn't load properly from the API"
+                        callback.onMovieError(msg)
+                    }
+                }
+
+                override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                    t.printStackTrace()
+                    val msg = "Error while getting movie data"
+                    callback.onMovieError(msg)
+                }
+            })
+    }
+
+    fun requestTopRatedMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false) {
         if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
 
-            callback.onMovieListReady(movieListData)
+            callback.onMovieListReady(listOfMovies)
             return
         }
         lastUsedFun = 2
@@ -136,15 +166,31 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
-                        if(!addInfo){
+                        if (!addInfo) {
                             movieListData = response.body()!!
-                        }else if(addInfo){
+                            listOfMovies = movieListData.list.map {
+                                Movie(
+                                    it.id, it.posterPath, it.lang,
+                                    it.title, it.date, it.voteAvg,
+                                    it.voteCnt, it.overview, movieListData.page,
+                                    movieListData.totalPages
+                                )
+                            }
+                        } else if (addInfo) {
                             prevMovieListData = movieListData
                             movieListData = response.body()!!
                             prevMovieListData.list.addAll(movieListData.list)
                             movieListData.list = prevMovieListData.list
+                            listOfMovies = movieListData.list.map {
+                                Movie(
+                                    it.id, it.posterPath, it.lang,
+                                    it.title, it.date, it.voteAvg,
+                                    it.voteCnt, it.overview, movieListData.page,
+                                    movieListData.totalPages
+                                )
+                            }
                         }
-                        callback.onMovieListReady(movieListData)
+                        callback.onMovieListReady(listOfMovies)
                         //   loadingBar.hide()
                     } else if (response.code() in 400..404) {
 
@@ -163,19 +209,15 @@ object LocalRepo {
             })
 
     }
-    fun createDatabase(context: Context) {
-        mDatabase = MDatabase.getDatabase(context)
-    }
 
-    interface MovieListCallback{
-        fun onMovieListReady(movieData: MovieList)
+
+    interface MovieListCallback {
+        fun onMovieListReady(movieData: List<Movie>)
         fun onMovieListError(errorMsg: String)
     }
 
-    interface MovieCallback{
-        fun onMovieReady(movies: List<Movie>)
+    interface MovieCallback {
+        fun onMovieReady(movieData: Movie)
         fun onMovieError(errorMsg: String)
     }
-
-
 }

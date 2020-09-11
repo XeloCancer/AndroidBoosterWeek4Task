@@ -1,4 +1,4 @@
-package com.useless.boosterapp4.ui
+package com.useless.boosterapp4
 
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
@@ -13,10 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.RecyclerAdapter
 import com.useless.boosterapp4.network.LocalRepo
-import com.useless.boosterapp4.network.LocalRepo.requestMovieList
-import com.useless.boosterapp4.network.Movie
-import com.useless.boosterapp4.network.MovieList
-import com.useless.boosterapp4.utils.show
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.movie_details.*
 import kotlinx.android.synthetic.main.movie_recycler_item.*
@@ -25,7 +21,8 @@ import java.util.*
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     RecyclerAdapter.PageControl {
 
-
+class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
+    RecyclerAdapter.PageControl {
 
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
@@ -61,7 +58,6 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
         movieViewModel.movieLiveData.observe(this, {
             onMovieListReady(it)
-
         })
 
         movieViewModel.onError.observe(this,{
@@ -75,6 +71,12 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
         movie_list_recycler_view.layoutManager = layoutManager
 
+        movie_list_recycler_view.adapter =
+            RecyclerAdapter(
+                null,
+                null,
+                this@MainActivity
+            )
 
         //TODO To call data on app launch. There is definitely a better way to do this so if you have ideas, please do it
 
@@ -85,7 +87,6 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
                 most_popular_button.id -> {
                     movieViewModel.movieLiveData.observe(this, {
                         onMovieListReady(it)
-
                     })
 
                     movieViewModel.onError.observe(this,{
@@ -168,12 +169,12 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
         }
     }
 
-    override fun onMovieListReady(movieData: MovieList) {
+    override fun onMovieListReady(movieData: List<Movie>) {
         Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
         movie_list_recycler_view.adapter =
             RecyclerAdapter(
                 movieData,
-                movieData.list,
+                movieData,
                 this@MainActivity
             )
     }
@@ -181,9 +182,5 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     override fun onMovieListError(errorMsg: String) {
         Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
     }
-
-
-
-
 
 }

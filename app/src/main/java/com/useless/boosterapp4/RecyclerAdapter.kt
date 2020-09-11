@@ -4,15 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.useless.boosterapp4.network.Movie
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.useless.boosterapp4.network.MovieList
+import com.useless.boosterapp4.ui.Movie
 
-class RecyclerAdapter (private val movieListData: MovieList?, private val listOfMovies: List<Movie>, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
+class RecyclerAdapter(private val movieListData: List<Movie>?, private val listOfMovies: List<Movie>?, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val layoutInflater = LayoutInflater.from(parent. context)
+        val layoutInflater = LayoutInflater.from(parent.context)
         val movieListView = layoutInflater.inflate(R.layout.movie_recycler_item, parent, false)
         return MovieViewHolder(movieListView)
     }
@@ -53,7 +52,7 @@ class RecyclerAdapter (private val movieListData: MovieList?, private val listOf
     }
 
     interface PageControl{
-        fun nextPage(movieListData: MovieList)
+        fun nextPage(movieListData: List<Movie>)
     }
 }
 
