@@ -15,4 +15,5 @@
         android:id="@+id/trailerItem"
         android:icon="@drawable/trailer_item_24"
         android:title="Trailer"/>
+
 </menu>
