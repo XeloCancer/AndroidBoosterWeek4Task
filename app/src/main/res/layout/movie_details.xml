@@ -71,24 +71,40 @@
         app:layout_constraintBottom_toBottomOf="@id/movie_poster_detail"/>
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginHorizontal="15dp"
         android:scrollbarSize="2dp"
+        app:layout_constraintBottom_toTopOf="@menu/bottom_nav"
         app:layout_constraintTop_toBottomOf="@id/movie_poster_detail"
-        app:layout_constraintBottom_toBottomOf="parent">
+        tools:layout_editor_absoluteX="24dp">
 
         <com.codesgood.views.JustifiedTextView
             android:id="@+id/movie_overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious."
+            android:textColor="#9A9A9A"
             android:textSize="16sp"
-            android:textColor="#9A9A9A"/>
+            tools:text="Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious." />
 
     </ScrollView>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_nav"/>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav"
+        tools:layout_editor_absoluteX="-16dp"
+       
+        />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
