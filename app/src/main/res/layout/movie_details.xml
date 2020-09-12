@@ -87,8 +87,8 @@
         android:background="#00FFFFFF"
         android:focusable="auto"
         android:focusableInTouchMode="false"
-        app:itemIconTint="@color/design_default_color_secondary_variant"
-        app:itemTextColor="#009688"
+        app:itemIconTint="#1d74a6"
+        app:itemTextColor="#1d74a6"
         app:labelVisibilityMode="selected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav" />
