@@ -10,6 +10,12 @@ import com.useless.boosterapp4.data.models.local.Movie
 class MovieViewModel (application: Application): AndroidViewModel(application) , LocalRepo.MovieListCallback,
     LocalRepo.MovieCallback {
 
+
+
+    companion object{
+        var isLoading = false
+            get() = isLoading
+    }
     private  val _movieLiveData: MutableLiveData<List<Movie>>
             by lazy { MutableLiveData<List<Movie>>() }
     val movieLiveData : LiveData<List<Movie>>
@@ -33,6 +39,7 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
     }
 
     fun loadMovieData(page: Int) {
+        isLoading = true
         if (page == currentPage && this::movieListData.isInitialized){
             _movieLiveData.value = movieListData
         return
@@ -41,7 +48,8 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
        LocalRepo.requestPopularMovieList (this, currentPage)
     }
 
-    override fun onMovieListReady(movieListData: List<Movie>) {
+    override fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
+        isLoading = false
         this.movieListData = movieListData
         _movieLiveData.value = this.movieListData
     }

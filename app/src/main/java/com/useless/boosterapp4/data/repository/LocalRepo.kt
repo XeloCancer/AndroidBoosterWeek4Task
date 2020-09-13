@@ -2,6 +2,7 @@ package com.useless.boosterapp4.data.repository
 
 import android.content.Context
 import android.widget.ProgressBar
+import android.widget.Toast
 import com.useless.boosterapp4.data.MoviesDatabase.MDatabase
 import com.useless.boosterapp4.data.MoviesDatabase.MovieMapper
 import com.useless.boosterapp4.data.models.local.Movie
@@ -43,7 +44,7 @@ object LocalRepo {
     ) {
 
         when (lastUsedFun) {
-            0 -> requestPopularMovieList(callback, page, addInfo)
+            1 -> requestPopularMovieList(callback, page, addInfo)
             2 -> requestTopRatedMovieList(callback, page, addInfo)
         }
     }
@@ -51,41 +52,45 @@ object LocalRepo {
     private lateinit var mDatabase: MDatabase
     private val mapper by lazy { MovieMapper() }
 
-//    fun requestMovieData(callback: MovieCallback, movieID: Int) {
-//        lastUsedFun = 0
-//        apiServices.doGetMovieByID(movieID, apiKey)
-//            .enqueue(object : Callback<MovieResponse> {
-//
-//                override fun onResponse(
-//                    call: Call<MovieResponse>,
-//                    response: Response<MovieResponse>
-//                ) {
-//                    println("OnResponseCalled")
-//                    if (response.isSuccessful) {
-//                        val movieDetail = mapper.mapToMovieUi(response.body()!!)
-//                        mDatabase.getMovieDao().addMovies(movieDetail)
-//                        callback.onMovieReady(movieDetail)
-//                    } else if (response.code() in 400..404) {
-//                        val msg = "The movies didn't load properly from the API"
-//                        callback.onMovieError(msg)
-//                    }
-//                }
-//                override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-//                    t.printStackTrace()
-//                    val msg = "Error while getting movie data"
-//                    callback.onMovieError(msg)
-//                }
-//            })
-//    }
+    /*fun requestMovieData(callback: MovieCallback, movieID: Int) {
+        lastUsedFun = 0
+        apiServices.doGetMovieByID(movieID, apiKey)
+            .enqueue(object : Callback<MovieResponse> {
+
+                override fun onResponse(
+                    call: Call<MovieResponse>,
+                    response: Response<MovieResponse>
+                ) {
+                    println("OnResponseCalled")
+                    if (response.isSuccessful) {
+                        val movieDetail = mapper.mapToMovieUi(response.body()!!)
+                        mDatabase.getMovieDao().addMovies(movieDetail)
+                        callback.onMovieReady(movieDetail)
+                    } else if (response.code() in 400..404) {
+                        val msg = "The movies didn't load properly from the API"
+                        callback.onMovieError(msg)
+                    }
+                }
+                override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                    t.printStackTrace()
+                    val msg = "Error while getting movie data"
+                    callback.onMovieError(msg)
+                }
+            })
+    }*/
 
     fun requestPopularMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false) {
-
-        if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
-
-            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies())
+        if(this::movieListData.isInitialized && page > movieListData.totalPages){
+            callback.onMovieListError("You're already in the last page")
             return
         }
-        lastUsedFun = -1
+
+        if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo) {
+
+            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
+            return
+        }
+        lastUsedFun = 1
 
         //   loadingBar.show()
         apiServices.doGetMoviesList(apiKey, page = page)
@@ -103,6 +108,7 @@ object LocalRepo {
                             movieListLocalData.forEach {
                                 mDatabase.getMovieDao().addMovies(it)
                             }
+                            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
                         } else if (addInfo) {
 //                            prevMovieListData = movieListData
                             movieListData = response.body()!!
@@ -112,8 +118,8 @@ object LocalRepo {
                             movieListLocalData.forEach {
                                 mDatabase.getMovieDao().addMovies(it)
                             }
+                            callback.onMovieListReady(movieListLocalData, true)
                         }
-                        callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies())
                         //    loadingBar.hide()
                     } else if (response.code() in 400..600) {
 
@@ -126,7 +132,7 @@ object LocalRepo {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
-                    callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies())
+                    callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
                 }
             })
 
@@ -134,6 +140,11 @@ object LocalRepo {
 
 
     fun requestTopRatedMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false) {
+        if(page > movieListData.totalPages){
+            callback.onMovieListError("You're already in the last page")
+            return
+        }
+
         if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
 
 //            callback.onMovieListReady(movieListData)
@@ -184,7 +195,7 @@ object LocalRepo {
     }
 
     interface MovieListCallback {
-        fun onMovieListReady(movieListData: List<Movie>)
+        fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean)
         fun onMovieListError(errorMsg: String)
     }
 

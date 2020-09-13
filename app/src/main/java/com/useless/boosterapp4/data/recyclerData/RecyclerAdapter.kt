@@ -10,7 +10,10 @@ import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.ui.MovieDetails
 
-class RecyclerAdapter (private val movieListData: List<Movie>?, private val listOfMovies: List<Movie>, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
+class RecyclerAdapter (private val movieListData: List<Movie>?,
+                       private val listOfMovies: List<Movie>,
+                       private val responseInterface: PageControl
+): RecyclerView.Adapter<MovieViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent. context)
@@ -40,21 +43,20 @@ class RecyclerAdapter (private val movieListData: List<Movie>?, private val list
             intent.putExtras(bundle)
             holder.itemView.context.startActivity(intent)
         }
-
-        if(position == itemCount - 1){
-
-            if (movieListData != null) {
-                responseInterface.nextPage(movieListData)
-            }
-        }
     }
 
     override fun getItemCount(): Int {
         return listOfMovies.size ?: 0
     }
 
+    fun addData(newMovieList: List<Movie>){
+    //TODO: add newMovieList to old
+    notifyDataSetChanged()
+    }
+
     interface PageControl{
-        fun nextPage(movieListData: List<Movie>)
+        fun nextPage()
+
     }
 }
 
