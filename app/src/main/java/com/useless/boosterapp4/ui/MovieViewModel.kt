@@ -38,6 +38,8 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
             _movieLiveData.value = movieListData
         return
         }
+        if (page == 1)
+       LocalRepo.requestPopularMovieList (this, currentPage)
     }
 
     override fun onMovieListReady(movieData: MovieListResponse) {
