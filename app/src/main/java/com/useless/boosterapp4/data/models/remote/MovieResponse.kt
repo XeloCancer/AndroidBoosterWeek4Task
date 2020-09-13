@@ -5,15 +5,15 @@ import com.google.gson.annotations.SerializedName
 data class MovieResponse (
     @SerializedName ("id")
     val id :Int,
-    @SerializedName ("posterPath")
+    @SerializedName ("poster_path")
     val posterPath: String,
-    @SerializedName ("lang")
+    @SerializedName ("original_language")
     val Lang: String,
-    @SerializedName ("date")
+    @SerializedName ("release_date")
     val date: String,
-    @SerializedName("voteAvg")
+    @SerializedName("vote_average")
     val voteAvg: Number,
-    @SerializedName("voteCnt")
+    @SerializedName("vote_count")
     val voteCnt: Int,
     @SerializedName("title")
     val movie_title: String,

@@ -147,16 +147,16 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
     }
 
-    override fun onMovieListReady(movieData: MovieListResponse) {
-        val listOfMovies: ArrayList<Movie>? = null
-        movieData.list.forEach{
-            listOfMovies?.add(it.mapToMovieUi())
-        }
+    override fun onMovieListReady(movieListData: MovieListResponse) {
+        val listOfMovies: ArrayList<Movie> = movieListData.list.map {
+            it.mapToMovieUi()
+        } as ArrayList<Movie>
+
         Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
         movie_list_recycler_view.adapter =
             RecyclerAdapter(
-                movieData,
-                listOfMovies!!,
+                movieListData,
+                listOfMovies,
                 this@MainActivity
             )
     }
