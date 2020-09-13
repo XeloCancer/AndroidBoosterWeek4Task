@@ -11,16 +11,15 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.useless.boosterapp4.R
-import com.useless.boosterapp4.RecyclerAdapter
-import com.useless.boosterapp4.network.LocalRepo
-import com.useless.boosterapp4.dataModels.remote.MovieListResponse
+import com.useless.boosterapp4.data.models.local.Movie
+import com.useless.boosterapp4.data.repository.LocalRepo
+import com.useless.boosterapp4.data.models.remote.MovieListResponse
+import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
+import com.useless.boosterapp4.utils.mapToMovieUi
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     RecyclerAdapter.PageControl {
-
-
-
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
 
@@ -55,7 +54,6 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
         movieViewModel.movieLiveData.observe(this, {
             onMovieListReady(it)
-
         })
 
         movieViewModel.onError.observe(this,{
@@ -64,8 +62,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
         movieViewModel.loadMovieData(page)
 
-
-           layoutManager = GridLayoutManager(this, 2)
+        layoutManager = GridLayoutManager(this, 2)
 
         movie_list_recycler_view.layoutManager = layoutManager
 
@@ -150,24 +147,16 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
     }
 
-
-
-
-    fun prevPage(pageNum: Int){
-        if(pageNum == 1){
-            Toast.makeText(applicationContext, "You're already at the first page", Toast.LENGTH_SHORT).show()
-            return
-        }else{
-            //TODO: call API with same data but query page = pageNum - 1
-        }
-    }
-
     override fun onMovieListReady(movieData: MovieListResponse) {
+        val listOfMovies: ArrayList<Movie>? = null
+        movieData.list.forEach{
+            listOfMovies?.add(it.mapToMovieUi())
+        }
         Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
         movie_list_recycler_view.adapter =
             RecyclerAdapter(
                 movieData,
-                movieData.list,
+                listOfMovies!!,
                 this@MainActivity
             )
     }
@@ -175,9 +164,5 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     override fun onMovieListError(errorMsg: String) {
         Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
     }
-
-
-
-
 
 }

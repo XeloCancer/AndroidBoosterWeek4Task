@@ -1,14 +1,8 @@
-package com.useless.boosterapp4.dataModels.remote
+package com.useless.boosterapp4.data.models.remote
 
 import com.google.gson.annotations.SerializedName
 
 data class MovieResponse (
-
-    @SerializedName("movie")
-val movielist: List<MovieData>,
-)
-
-data class MovieData(
     @SerializedName ("id")
     val id :Int,
     @SerializedName ("posterPath")
@@ -21,12 +15,6 @@ data class MovieData(
     val voteAvg: Number,
     @SerializedName("voteCnt")
     val voteCnt: Int,
-    @SerializedName("info")
-    val movie_info: List<Movieinfo>,
-
-    )
-
-data class Movieinfo(
     @SerializedName("title")
     val movie_title: String,
     @SerializedName("overview")

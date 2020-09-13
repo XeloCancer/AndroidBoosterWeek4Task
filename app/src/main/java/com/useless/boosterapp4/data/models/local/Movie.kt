@@ -1,8 +1,7 @@
-package com.useless.boosterapp4.dataModels.local
+package com.useless.boosterapp4.data.models.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 //Re-check if we need anything else from Movie from the API, we already got the bare minimum for the design.
 

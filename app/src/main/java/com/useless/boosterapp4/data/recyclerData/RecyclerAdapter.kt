@@ -1,15 +1,17 @@
-package com.useless.boosterapp4
+package com.useless.boosterapp4.data.recyclerData
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.useless.boosterapp4.dataModels.local.Movie
+import com.useless.boosterapp4.data.models.local.Movie
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.useless.boosterapp4.dataModels.remote.MovieListResponse
+import com.useless.boosterapp4.R
+import com.useless.boosterapp4.data.models.remote.MovieListResponse
+import com.useless.boosterapp4.ui.MovieDetails
 
-class RecyclerAdapter (private val movieListData: MovieListResponse?, private val listOfMovies: List<Movie>, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
+class RecyclerAdapter (private val movieListData: MovieListResponse?, private val listOfMovies: ArrayList<Movie>, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent. context)

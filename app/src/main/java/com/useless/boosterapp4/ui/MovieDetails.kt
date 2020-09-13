@@ -1,9 +1,10 @@
-package com.useless.boosterapp4
+package com.useless.boosterapp4.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Html
 import com.squareup.picasso.Picasso
+import com.useless.boosterapp4.R
 import kotlinx.android.synthetic.main.movie_details.*
 
 class MovieDetails : AppCompatActivity() {

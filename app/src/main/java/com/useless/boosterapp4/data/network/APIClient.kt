@@ -1,4 +1,4 @@
-package com.useless.boosterapp4.network
+package com.useless.boosterapp4.data.network
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

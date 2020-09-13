@@ -1,12 +1,14 @@
-package com.useless.boosterapp4.network
+package com.useless.boosterapp4.data.repository
 
 import android.content.Context
 import android.widget.ProgressBar
-import com.useless.boosterapp4.MoviesDatabase.MDatabase
-import com.useless.boosterapp4.MoviesDatabase.MovieMapper
-import com.useless.boosterapp4.dataModels.local.Movie
-import com.useless.boosterapp4.dataModels.remote.MovieListResponse
-import com.useless.boosterapp4.dataModels.remote.MovieResponse
+import com.useless.boosterapp4.data.MoviesDatabase.MDatabase
+import com.useless.boosterapp4.data.MoviesDatabase.MovieMapper
+import com.useless.boosterapp4.data.models.local.Movie
+import com.useless.boosterapp4.data.models.remote.MovieListResponse
+import com.useless.boosterapp4.data.models.remote.MovieResponse
+import com.useless.boosterapp4.data.network.APIClient
+import com.useless.boosterapp4.data.network.ApiInterface
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,12 +32,12 @@ object LocalRepo {
     private var lastUsedFun: Int = 4
     private lateinit var movieListData: MovieListResponse
     private lateinit var prevMovieListData: MovieListResponse
-    private lateinit var movieData: Movie
+    private lateinit var movieData: MovieResponse
 
     fun requestLastFun(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean){
 
         when(lastUsedFun){
-            0 -> requestMovieList(callback,  page, addInfo)
+            0 -> requestPopularMovieList(callback,  page, addInfo)
             2 -> requestTopRatedMovieList(callback, page, addInfo)
         }
     }
@@ -44,7 +46,6 @@ object LocalRepo {
     private val mapper by lazy { MovieMapper() }
 
     fun requestMovieData(callback: MovieCallback, movieID: Int){
-
         lastUsedFun = 0
         apiServices.doGetMovieByID(movieID, apiKey)
             .enqueue(object : Callback<MovieResponse> {
@@ -71,7 +72,7 @@ object LocalRepo {
             })
     }
 
-    fun requestMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false) {
+    fun requestPopularMovieList(callback: MovieListCallback, page : Int, addInfo: Boolean = false) {
 
         if (this::movieListData.isInitialized && lastUsedFun == 0 && !addInfo) {
 
@@ -119,7 +120,7 @@ object LocalRepo {
 
 
 
-    fun requestTopRatedMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false){
+    fun requestTopRatedMovieList(callback: MovieListCallback, page : Int, addInfo: Boolean = false){
         if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
 
             callback.onMovieListReady(movieListData)
@@ -169,12 +170,12 @@ object LocalRepo {
     }
 
     interface MovieListCallback{
-        fun onMovieListReady(movieData: MovieListResponse)
+        fun onMovieListReady(movieListData: MovieListResponse)
         fun onMovieListError(errorMsg: String)
     }
 
     interface MovieCallback{
-        fun onMovieReady(movies: List<Movie>)
+        fun onMovieReady(movieData: Movie)
         fun onMovieError(errorMsg: String)
     }
 

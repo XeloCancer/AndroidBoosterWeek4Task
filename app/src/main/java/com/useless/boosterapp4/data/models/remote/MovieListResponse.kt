@@ -1,11 +1,10 @@
-package com.useless.boosterapp4.dataModels.remote
+package com.useless.boosterapp4.data.models.remote
 
 import com.google.gson.annotations.SerializedName
-import com.useless.boosterapp4.dataModels.local.Movie
 
 data class MovieListResponse(
     @SerializedName("results")
-    var list: ArrayList<Movie>,
+    var list: ArrayList<MovieResponse>,
     @SerializedName("total_pages")
     val totalPages: Int,
     @SerializedName("page")
