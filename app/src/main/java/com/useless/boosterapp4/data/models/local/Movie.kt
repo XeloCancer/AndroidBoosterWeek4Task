@@ -11,7 +11,7 @@ data class Movie(
         val lang: String ="",
         val title: String ="",
         val date: String ="",
-        val voteAvg: Number,
+        val voteAvg: Int,
         val voteCnt: Int,
         val overview : String ="",
         @PrimaryKey

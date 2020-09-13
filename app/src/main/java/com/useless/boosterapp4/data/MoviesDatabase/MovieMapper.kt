@@ -12,7 +12,7 @@ class MovieMapper {
                 movieResponse.Lang,
                 movieResponse.movie_title,
                 movieResponse.date,
-                movieResponse.voteAvg,
+                movieResponse.voteAvg.toInt(),
                 movieResponse.voteCnt,
                 movieResponse.overview,
                 movieResponse.id

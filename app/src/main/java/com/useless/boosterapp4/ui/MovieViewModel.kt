@@ -37,9 +37,7 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
         if (page == currentPage && this::movieListData.isInitialized){
             _movieLiveData.value = movieListData
         return
-    }
-        if (page == 1)
-       LocalRepo.requestMovieData (this, currentPage)
+        }
     }
 
     override fun onMovieListReady(movieData: MovieListResponse) {
