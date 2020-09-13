@@ -6,10 +6,12 @@ import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import com.codesgood.views.JustifiedTextView
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.fragments.DescriptionFragment
 import com.useless.boosterapp4.fragments.ReviewFragment
 import com.useless.boosterapp4.fragments.TrailerFragment
+import kotlinx.android.synthetic.main.fragment_description.*
 import kotlinx.android.synthetic.main.movie_details.*
 import java.util.*
 
@@ -24,7 +26,6 @@ class MovieDetails : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.movie_details)
-
         val descriptionFragment = DescriptionFragment()
         val reviewFragment = ReviewFragment()
         val trailerFragment = TrailerFragment()
@@ -33,7 +34,10 @@ class MovieDetails : AppCompatActivity() {
 
         bottom_nav.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.descriptionItem -> makeCurrentFragment(descriptionFragment)
+                R.id.descriptionItem -> {
+                    makeCurrentFragment(descriptionFragment)
+                    descriptionFragment.IPassData(intent.getStringExtra("overview"))
+                }
                 R.id.reviewItem -> makeCurrentFragment(reviewFragment)
                 R.id.trailerItem -> makeCurrentFragment(trailerFragment)
             }
@@ -55,14 +59,13 @@ class MovieDetails : AppCompatActivity() {
         val title : String? = intent.getStringExtra("title")
         val releaseDate : String? = intent.getStringExtra("release_date")
         val language : String? = intent.getStringExtra("language")!!.toUpperCase(Locale.ROOT)
-        val overview : String? = intent.getStringExtra("overview")
+       // val overview : String? = intent.getStringExtra("overview")
 
         Picasso.get().load("https://image.tmdb.org/t/p/w500/${posterPath}").into(movie_poster_detail)
         movie_name.text = HtmlCompat.fromHtml("<b>Title:</b> <br> $title", HtmlCompat.FROM_HTML_MODE_LEGACY)
         release_date.text = HtmlCompat.fromHtml("<b>Release Date:</b> <br> $releaseDate", HtmlCompat.FROM_HTML_MODE_LEGACY)
         languages.text = HtmlCompat.fromHtml("<b>Languages:</b> <br> $language", HtmlCompat.FROM_HTML_MODE_LEGACY)
-        movie_overview.text = HtmlCompat.fromHtml(overview!!, HtmlCompat.FROM_HTML_MODE_LEGACY)
-
+     //   movie_overview.text = HtmlCompat.fromHtml(overview!!, HtmlCompat.FROM_HTML_MODE_LEGACY)
         this.setFinishOnTouchOutside(true)
 
         back_button.setOnClickListener { finish() }
@@ -71,6 +74,11 @@ class MovieDetails : AppCompatActivity() {
     private  fun makeCurrentFragment(fragment : Fragment) =
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.fragment_container,fragment)
+          //  var we : PassData
+       //    we = (PassData) fragment
             commit()
+   }
+   interface PassData {
+       fun IPassData (data: String?)
     }
 }

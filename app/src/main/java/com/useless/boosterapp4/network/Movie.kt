@@ -21,4 +21,6 @@ data class Movie(
         val voteCnt: Int,
         @SerializedName("overview")
         val overview : String,
+        @SerializedName("review")
+        val review : String,
         )

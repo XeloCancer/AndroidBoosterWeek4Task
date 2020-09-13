@@ -33,6 +33,7 @@ class RecyclerAdapter (private val movieListData: MovieList?, private val listOf
         bundle.putString("language", movie.lang)
         bundle.putString("overview", movie.overview)
 
+
         //OnClickListener responsible for sending data to the other activity
         holder.itemView.setOnClickListener {
             val intent : Intent = Intent(holder.itemView.context, MovieDetails::class.java)
