@@ -8,10 +8,9 @@ import com.useless.boosterapp4.data.models.local.Movie
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.R
-import com.useless.boosterapp4.data.models.remote.MovieListResponse
 import com.useless.boosterapp4.ui.MovieDetails
 
-class RecyclerAdapter (private val movieListData: MovieListResponse?, private val listOfMovies: ArrayList<Movie>, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
+class RecyclerAdapter (private val movieListData: List<Movie>?, private val listOfMovies: List<Movie>, private val responseInterface: PageControl): RecyclerView.Adapter<MovieViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent. context)
@@ -20,11 +19,11 @@ class RecyclerAdapter (private val movieListData: MovieListResponse?, private va
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = listOfMovies?.get(position)
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/${movie?.posterPath}").into(holder.moviePicture)
-        holder.movieTitle.text = movie!!.title
-        holder.rating.text = "${(movie.voteAvg.toDouble() * 10).toInt()}%"
-        holder.ratingBar.progress = (movie.voteAvg.toDouble() * 10).toInt()
+        val movie = listOfMovies[position]
+        Picasso.get().load("https://image.tmdb.org/t/p/w500/${movie.posterPath}").into(holder.moviePicture)
+        holder.movieTitle.text = movie.title
+        holder.rating.text = "${(movie.voteAvg * 10).toInt()}%"
+        holder.ratingBar.progress = (movie.voteAvg * 10).toInt()
         System.out.println("Position is $position, and Item count is $itemCount")
 
         //Creates a bundle of data to pass to the activity
@@ -51,11 +50,11 @@ class RecyclerAdapter (private val movieListData: MovieListResponse?, private va
     }
 
     override fun getItemCount(): Int {
-        return listOfMovies?.size ?: 0
+        return listOfMovies.size ?: 0
     }
 
     interface PageControl{
-        fun nextPage(movieListData: MovieListResponse)
+        fun nextPage(movieListData: List<Movie>)
     }
 }
 

@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.data.models.local.Movie
 import com.useless.boosterapp4.data.repository.LocalRepo
-import com.useless.boosterapp4.data.models.remote.MovieListResponse
 import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
-import com.useless.boosterapp4.utils.mapToMovieUi
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
@@ -33,9 +31,9 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     private lateinit var layoutManager: LinearLayoutManager
     private var page : Int = 1
 
-    override fun nextPage(movieListData: MovieListResponse){
-        var pageNum = movieListData.page
-        var totalPages = movieListData.totalPages
+    override fun nextPage(movieListData: List<Movie>){
+        var pageNum = movieListData.last().page
+        var totalPages = movieListData.last().totalPages
         if(pageNum == totalPages){
             Toast.makeText(applicationContext, "You're already at the last page", Toast.LENGTH_SHORT).show()
             return
@@ -147,10 +145,8 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
     }
 
-    override fun onMovieListReady(movieListData: MovieListResponse) {
-        val listOfMovies: ArrayList<Movie> = movieListData.list.map {
-            it.mapToMovieUi()
-        } as ArrayList<Movie>
+    override fun onMovieListReady(movieListData: List<Movie>) {
+        val listOfMovies: List<Movie> = movieListData
 
         Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
         movie_list_recycler_view.adapter =

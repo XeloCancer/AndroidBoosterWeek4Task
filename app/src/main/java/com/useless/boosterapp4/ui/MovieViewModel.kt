@@ -6,14 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.useless.boosterapp4.data.repository.LocalRepo
 import com.useless.boosterapp4.data.models.local.Movie
-import com.useless.boosterapp4.data.models.remote.MovieListResponse
 
 class MovieViewModel (application: Application): AndroidViewModel(application) , LocalRepo.MovieListCallback,
     LocalRepo.MovieCallback {
 
-    private  val _movieLiveData: MutableLiveData<MovieListResponse>
-            by lazy { MutableLiveData<MovieListResponse>() }
-    val movieLiveData : LiveData<MovieListResponse>
+    private  val _movieLiveData: MutableLiveData<List<Movie>>
+            by lazy { MutableLiveData<List<Movie>>() }
+    val movieLiveData : LiveData<List<Movie>>
     get() = _movieLiveData
 
     private val _onError : MutableLiveData<String>
@@ -26,7 +25,7 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
     val movieDetail: MutableLiveData<Movie>
         get() = _movieDetail
 
-    private lateinit var movieListData: MovieListResponse
+    private lateinit var movieListData: List<Movie>
 
     private var currentPage = 1
     init {
@@ -39,12 +38,12 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
         return
         }
         if (page == 1)
-       LocalRepo.requestTopRatedMovieList (this, currentPage)
+       LocalRepo.requestPopularMovieList (this, currentPage)
     }
 
-    override fun onMovieListReady(movieData: MovieListResponse) {
-        movieListData = movieData
-        _movieLiveData.value = movieListData
+    override fun onMovieListReady(movieListData: List<Movie>) {
+        this.movieListData = movieListData
+        _movieLiveData.value = this.movieListData
     }
 
     override fun onMovieListError(errorMsg: String) {
