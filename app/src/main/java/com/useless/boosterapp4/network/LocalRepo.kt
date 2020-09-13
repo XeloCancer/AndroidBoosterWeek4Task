@@ -4,8 +4,9 @@ import android.content.Context
 import android.widget.ProgressBar
 import com.useless.boosterapp4.MoviesDatabase.MDatabase
 import com.useless.boosterapp4.MoviesDatabase.MovieMapper
-import com.useless.boosterapp4.remote.MovieResponse
-import com.useless.boosterapp4.ui.MovieViewModel
+import com.useless.boosterapp4.dataModels.local.Movie
+import com.useless.boosterapp4.dataModels.remote.MovieListResponse
+import com.useless.boosterapp4.dataModels.remote.MovieResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,8 +28,8 @@ object LocalRepo {
 
     private const val apiKey = "6637f7d017283c784ff6746c01f71453"
     private var lastUsedFun: Int = 4
-    private lateinit var movieListData: MovieList
-    private lateinit var prevMovieListData: MovieList
+    private lateinit var movieListData: MovieListResponse
+    private lateinit var prevMovieListData: MovieListResponse
     private lateinit var movieData: Movie
 
     fun requestLastFun(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean){
@@ -81,11 +82,11 @@ object LocalRepo {
 
         //   loadingBar.show()
         apiServices.doGetMoviesList(apiKey, page = page)
-            .enqueue(object : Callback<MovieList> {
+            .enqueue(object : Callback<MovieListResponse> {
 
                 override fun onResponse(
-                    call: Call<MovieList>,
-                    response: Response<MovieList>
+                    call: Call<MovieListResponse>,
+                    response: Response<MovieListResponse>
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
@@ -107,7 +108,7 @@ object LocalRepo {
                     }
                 }
 
-                override fun onFailure(call: Call<MovieList>, t: Throwable) {
+                override fun onFailure(call: Call<MovieListResponse>, t: Throwable) {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
@@ -128,11 +129,11 @@ object LocalRepo {
 
         // loadingBar.show()
         apiServices.doGetMovieByRate(apiKey, page = page)
-            .enqueue(object : Callback<MovieList> {
+            .enqueue(object : Callback<MovieListResponse> {
 
                 override fun onResponse(
-                    call: Call<MovieList>,
-                    response: Response<MovieList>
+                    call: Call<MovieListResponse>,
+                    response: Response<MovieListResponse>
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
@@ -153,7 +154,7 @@ object LocalRepo {
                     }
                 }
 
-                override fun onFailure(call: Call<MovieList>, t: Throwable) {
+                override fun onFailure(call: Call<MovieListResponse>, t: Throwable) {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
@@ -168,7 +169,7 @@ object LocalRepo {
     }
 
     interface MovieListCallback{
-        fun onMovieListReady(movieData: MovieList)
+        fun onMovieListReady(movieData: MovieListResponse)
         fun onMovieListError(errorMsg: String)
     }
 

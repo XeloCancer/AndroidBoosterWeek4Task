@@ -2,7 +2,7 @@ package com.useless.boosterapp4.MoviesDatabase
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.useless.boosterapp4.network.Movie
+import com.useless.boosterapp4.dataModels.local.Movie
 
 @Dao
 interface MovieDao {

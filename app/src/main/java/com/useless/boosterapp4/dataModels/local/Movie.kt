@@ -1,4 +1,4 @@
-package com.useless.boosterapp4.network
+package com.useless.boosterapp4.dataModels.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

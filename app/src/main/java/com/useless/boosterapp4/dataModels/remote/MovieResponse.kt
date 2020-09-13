@@ -1,10 +1,10 @@
-package com.useless.boosterapp4.remote
+package com.useless.boosterapp4.dataModels.remote
 
 import com.google.gson.annotations.SerializedName
 
 data class MovieResponse (
 
-@SerializedName("movie")
+    @SerializedName("movie")
 val movielist: List<MovieData>,
 )
 
@@ -24,7 +24,7 @@ data class MovieData(
     @SerializedName("info")
     val movie_info: List<Movieinfo>,
 
-)
+    )
 
 data class Movieinfo(
     @SerializedName("title")

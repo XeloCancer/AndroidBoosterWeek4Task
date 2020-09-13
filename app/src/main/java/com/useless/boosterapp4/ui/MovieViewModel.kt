@@ -5,28 +5,28 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.useless.boosterapp4.network.LocalRepo
-import com.useless.boosterapp4.network.Movie
-import com.useless.boosterapp4.network.MovieList
+import com.useless.boosterapp4.dataModels.local.Movie
+import com.useless.boosterapp4.dataModels.remote.MovieListResponse
 
 class MovieViewModel (application: Application): AndroidViewModel(application) , LocalRepo.MovieListCallback,
     LocalRepo.MovieCallback {
 
-   private  val _movieLiveData: MutableLiveData<MovieList>
-            by lazy { MutableLiveData<MovieList>() }
-    val movieLiveData : LiveData<MovieList>
+   private  val _movieLiveData: MutableLiveData<MovieListResponse>
+            by lazy { MutableLiveData<MovieListResponse>() }
+    val movieLiveData : LiveData<MovieListResponse>
     get() = _movieLiveData
 
     private val _onError : MutableLiveData<String>
-    by lazy { MutableLiveData<String>()}
+    by lazy { MutableLiveData<String>() }
     val onError : LiveData<String>
     get() = _onError
 
-    private val _movieDetail: MutableLiveData <List <Movie>>
-            by lazy { MutableLiveData < List<Movie> > () }
+    private val _movieDetail: MutableLiveData <List<Movie>>
+            by lazy { MutableLiveData <List<Movie>>() }
     val movieDetail: MutableLiveData<List<Movie>>
         get() = _movieDetail
 
-    private lateinit var movieListData: MovieList
+    private lateinit var movieListData: MovieListResponse
 
     private var currentPage = 1
     init {
@@ -43,7 +43,7 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
 
     }
 
-    override fun onMovieListReady(movieData: MovieList) {
+    override fun onMovieListReady(movieData: MovieListResponse) {
         movieListData = movieData
         _movieLiveData.value = movieListData
     }

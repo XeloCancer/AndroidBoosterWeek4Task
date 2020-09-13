@@ -1,8 +1,7 @@
 package com.useless.boosterapp4.MoviesDatabase
 
-import com.useless.boosterapp4.network.Movie
-import com.useless.boosterapp4.remote.MovieResponse
-import  com.useless.boosterapp4.remote.MovieData
+import com.useless.boosterapp4.dataModels.local.Movie
+import com.useless.boosterapp4.dataModels.remote.MovieResponse
 
 
 class MovieMapper {
