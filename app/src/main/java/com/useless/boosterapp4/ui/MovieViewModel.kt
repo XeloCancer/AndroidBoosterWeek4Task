@@ -11,7 +11,7 @@ import com.useless.boosterapp4.data.models.remote.MovieListResponse
 class MovieViewModel (application: Application): AndroidViewModel(application) , LocalRepo.MovieListCallback,
     LocalRepo.MovieCallback {
 
-   private  val _movieLiveData: MutableLiveData<MovieListResponse>
+    private  val _movieLiveData: MutableLiveData<MovieListResponse>
             by lazy { MutableLiveData<MovieListResponse>() }
     val movieLiveData : LiveData<MovieListResponse>
     get() = _movieLiveData
@@ -39,7 +39,7 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
         return
         }
         if (page == 1)
-       LocalRepo.requestPopularMovieList (this, currentPage)
+       LocalRepo.requestTopRatedMovieList (this, currentPage)
     }
 
     override fun onMovieListReady(movieData: MovieListResponse) {
