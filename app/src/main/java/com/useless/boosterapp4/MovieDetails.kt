@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
+import com.useless.boosterapp4.fragments.DescriptionFragment
+import com.useless.boosterapp4.fragments.ReviewFragment
+import com.useless.boosterapp4.fragments.TrailerFragment
 import kotlinx.android.synthetic.main.movie_details.*
 import java.util.*
 
@@ -22,7 +25,22 @@ class MovieDetails : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.movie_details)
 
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val descriptionFragment = DescriptionFragment()
+        val reviewFragment = ReviewFragment()
+        val trailerFragment = TrailerFragment()
+
+        makeCurrentFragment(descriptionFragment)
+
+        bottom_nav.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.descriptionItem -> makeCurrentFragment(descriptionFragment)
+                R.id.reviewItem -> makeCurrentFragment(reviewFragment)
+                R.id.trailerItem -> makeCurrentFragment(trailerFragment)
+            }
+            true
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             this.display!!.getRealMetrics(displayMetrics)
         }
         else{
@@ -48,5 +66,11 @@ class MovieDetails : AppCompatActivity() {
         this.setFinishOnTouchOutside(true)
 
         back_button.setOnClickListener { finish() }
+    }
+
+    private  fun makeCurrentFragment(fragment : Fragment) =
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container,fragment)
+            commit()
     }
 }

@@ -16,6 +16,7 @@ import com.useless.boosterapp4.network.LocalRepo
 import com.useless.boosterapp4.network.LocalRepo.requestMovieList
 import com.useless.boosterapp4.network.MovieList
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.movie_details.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
