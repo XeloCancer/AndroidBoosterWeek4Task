@@ -78,13 +78,13 @@ object LocalRepo {
             })
     }*/
 
-    fun requestPopularMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false) {
-        if(this::movieListData.isInitialized && page > movieListData.totalPages){
+    fun requestPopularMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false, changing : Boolean = false) {
+        if (this::movieListData.isInitialized && page > movieListData.totalPages) {
             callback.onMovieListError("You're already in the last page")
             return
         }
 
-        if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo) {
+        if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
 
             callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
             return
@@ -101,9 +101,9 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
+                        if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
+                            mDatabase.getMovieDao().deleteAllMovies()
                         if (!addInfo) {
-                            if(!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
-                                mDatabase.getMovieDao().deleteAllMovies()
                             movieListData = response.body()!!
                             movieListLocalData = mapper.mapToMovieListUi(movieListData)
                             movieListLocalData.forEach {
@@ -141,13 +141,13 @@ object LocalRepo {
     }
 
 
-    fun requestTopRatedMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false) {
-        if(this::movieListData.isInitialized && page > movieListData.totalPages){
+    fun requestTopRatedMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false, changing : Boolean = false) {
+        if (this::movieListData.isInitialized && page > movieListData.totalPages) {
             callback.onMovieListError("You're already in the last page")
             return
         }
 
-        if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo) {
+        if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
 
             callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
             return
@@ -164,9 +164,9 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
+                        if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
+                            mDatabase.getMovieDao().deleteAllMovies()
                         if (!addInfo) {
-                            if(!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
-                                mDatabase.getMovieDao().deleteAllMovies()
                             movieListData = response.body()!!
                             movieListLocalData = mapper.mapToMovieListUi(movieListData)
                             movieListLocalData.forEach {

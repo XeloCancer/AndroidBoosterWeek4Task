@@ -37,16 +37,19 @@ class MovieViewModel (application: Application): AndroidViewModel(application),
         LocalRepo.createDatabase(application)
     }
 
-    fun loadMovieData(page: Int, nextPage: Boolean) {
+    fun loadMovieData(page: Int, nextPage: Boolean, popular : Boolean = true, changing : Boolean = false) {
         isLoading = true
         if(!nextPage){
-            if (page == currentPage && this::movieListData.isInitialized){
+            if (page == currentPage && this::movieListData.isInitialized && !changing){
                 _movieLiveData.value = movieListData
                 return
             }
-            if (page == 1)
-                LocalRepo.requestPopularMovieList (this@MovieViewModel, currentPage)
-                LocalRepo.requestTopRatedMovieList(this@MovieViewModel, currentPage)
+            if (page == 1){
+                if(popular)
+                    LocalRepo.requestPopularMovieList (this@MovieViewModel, currentPage, changing)
+                else
+                    LocalRepo.requestTopRatedMovieList(this@MovieViewModel, currentPage, changing)
+            }
         }
         else{
             nextPage(page)

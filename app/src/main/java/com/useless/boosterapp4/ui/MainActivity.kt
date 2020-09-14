@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                         onMovieListError(it)
                     })
                     firstTime = true
-                    movieViewModel.loadMovieData(page, false)
+                    movieViewModel.loadMovieData(page, false, changing = true)
 
             //    requestMovieList(this@MainActivity, page)
                     //To animate color change for different buttons
@@ -110,9 +110,7 @@ class MainActivity : AppCompatActivity() {
                         onMovieListError(it)
                     })
                     firstTime = true
-                    movieViewModel.loadMovieData(page, false)
-
-                    movieViewModel.loadMovieData(page, false)
+                    movieViewModel.loadMovieData(page, false, false, changing = true)
 
                     //To animate color change for different buttons
                     colorAnimLightTopRated = ObjectAnimator.ofInt(
