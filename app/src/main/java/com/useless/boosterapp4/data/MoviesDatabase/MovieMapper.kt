@@ -10,16 +10,16 @@ class MovieMapper {
 
     fun mapToMovieUi(movieResponse: MovieResponse, page: Int, totalPages: Int): Movie {
         return Movie(
-            movieResponse.posterPath,
-            movieResponse.Lang,
-            movieResponse.movie_title,
-            movieResponse.date,
-            movieResponse.voteAvg.toDouble(),
-            movieResponse.voteCnt,
-            movieResponse.overview,
-            page,
-            totalPages,
-            movieResponse.id
+            id = movieResponse.id,
+            title = movieResponse.movie_title,
+            posterPath = movieResponse.posterPath,
+            lang = movieResponse.Lang,
+            date = movieResponse.date,
+            voteAvg = movieResponse.voteAvg.toDouble(),
+            voteCnt = movieResponse.voteCnt,
+            overview = movieResponse.overview,
+            page = page,
+            totalPages = totalPages,
         )
     }
 
