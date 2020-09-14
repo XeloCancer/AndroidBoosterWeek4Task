@@ -17,7 +17,7 @@ import com.useless.boosterapp4.data.repository.LocalRepo
 import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
+class MainActivity : AppCompatActivity(),
     RecyclerAdapter.PageControl {
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
@@ -36,11 +36,10 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     private lateinit var layoutManager: LinearLayoutManager
     private var page : Int = 1
 
-    override fun nextPage(){
-        page++
+    override fun nextPage(page: Int){
         addInfo = true
         println(" THE FIRSTTIME BOOLEAN IS $firstTime")
-        LocalRepo.requestLastFun(this@MainActivity, loading_bar, page, addInfo)
+        movieViewModel.loadMovieData(page, true)
 
     }
     private val movieViewModel : MovieViewModel by viewModels()
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
             onMovieListError(it)
         })
 
-        movieViewModel.loadMovieData(page)
+        movieViewModel.loadMovieData(page, false)
 
         layoutManager = GridLayoutManager(this, 2)
 
@@ -81,7 +80,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
                         onMovieListError(it)
                     })
                     firstTime = true
-                    movieViewModel.loadMovieData(page)
+                    movieViewModel.loadMovieData(page, false)
 
             //    requestMovieList(this@MainActivity, page)
                     //To animate color change for different buttons
@@ -105,7 +104,7 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
                 top_rated_button.id -> {
 
-                    LocalRepo.requestTopRatedMovieList(this@MainActivity, page)
+                    movieViewModel.loadMovieData(page, false)
 
                     //To animate color change for different buttons
                     colorAnimLightTopRated = ObjectAnimator.ofInt(
@@ -130,9 +129,9 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
 
     }
 
-    override fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
+    fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
         val listOfMovies: List<Movie> = movieListData
-
+        println("The call back is in the MainActivity dum dum !")
         if(firstTime){
             firstTime = false
             adapter = RecyclerAdapter(
@@ -153,13 +152,13 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
         movie_list_recycler_view.addOnScrollListener(object: RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if(!movie_list_recycler_view.canScrollVertically(1) && !MovieViewModel.isLoading){
-                    nextPage()
+                    nextPage(++page)
                 }
             }
         })
     }
 
-    override fun onMovieListError(errorMsg: String) {
+    fun onMovieListError(errorMsg: String) {
         Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
     }
 

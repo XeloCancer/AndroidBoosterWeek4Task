@@ -38,7 +38,6 @@ object LocalRepo {
 
     fun requestLastFun(
         callback: MovieListCallback,
-        loadingBar: ProgressBar,
         page: Int,
         addInfo: Boolean
     ) {
@@ -118,6 +117,7 @@ object LocalRepo {
                             movieListLocalData.forEach {
                                 mDatabase.getMovieDao().addMovies(it)
                             }
+                            println("I am calling back the popular movie list, with addInfo as $addInfo")
                             callback.onMovieListReady(movieListLocalData, true)
                         }
                         //    loadingBar.hide()

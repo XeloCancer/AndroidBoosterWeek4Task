@@ -6,15 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.useless.boosterapp4.data.repository.LocalRepo
 import com.useless.boosterapp4.data.models.local.Movie
+import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MovieViewModel (application: Application): AndroidViewModel(application) , LocalRepo.MovieListCallback,
-    LocalRepo.MovieCallback {
+class MovieViewModel (application: Application): AndroidViewModel(application),
+    LocalRepo.MovieListCallback, LocalRepo.MovieCallback, RecyclerAdapter.PageControl {
 
 
 
     companion object{
         var isLoading = false
-            get() = isLoading
     }
     private  val _movieLiveData: MutableLiveData<List<Movie>>
             by lazy { MutableLiveData<List<Movie>>() }
@@ -38,18 +39,27 @@ class MovieViewModel (application: Application): AndroidViewModel(application) ,
         LocalRepo.createDatabase(application)
     }
 
-    fun loadMovieData(page: Int) {
+    fun loadMovieData(page: Int, nextPage: Boolean) {
         isLoading = true
-        if (page == currentPage && this::movieListData.isInitialized){
-            _movieLiveData.value = movieListData
-        return
+        if(!nextPage){
+            if (page == currentPage && this::movieListData.isInitialized){
+                _movieLiveData.value = movieListData
+                return
+            }
+            if (page == 1)
+                LocalRepo.requestPopularMovieList (this@MovieViewModel, currentPage)
+        }else{
+            nextPage(page)
         }
-        if (page == 1)
-       LocalRepo.requestPopularMovieList (this, currentPage)
+    }
+
+    override fun nextPage(page: Int) {
+        LocalRepo.requestLastFun(this@MovieViewModel, page, true)
     }
 
     override fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
         isLoading = false
+        println("the isLoading parameter is here and it's $isLoading")
         this.movieListData = movieListData
         _movieLiveData.value = this.movieListData
     }

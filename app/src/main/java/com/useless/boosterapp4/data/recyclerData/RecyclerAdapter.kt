@@ -55,7 +55,7 @@ class RecyclerAdapter (private val movieListData: List<Movie>?,
     }
 
     interface PageControl{
-        fun nextPage()
+        fun nextPage(page: Int)
 
     }
 }
