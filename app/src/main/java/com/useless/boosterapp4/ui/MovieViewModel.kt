@@ -46,7 +46,9 @@ class MovieViewModel (application: Application): AndroidViewModel(application),
             }
             if (page == 1)
                 LocalRepo.requestPopularMovieList (this@MovieViewModel, currentPage)
-        }else{
+                LocalRepo.requestTopRatedMovieList(this@MovieViewModel, currentPage)
+        }
+        else{
             nextPage(page)
         }
     }

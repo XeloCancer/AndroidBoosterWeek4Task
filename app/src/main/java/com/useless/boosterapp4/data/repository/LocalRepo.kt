@@ -142,19 +142,19 @@ object LocalRepo {
 
 
     fun requestTopRatedMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false) {
-        if(page > movieListData.totalPages){
+        if(this::movieListData.isInitialized && page > movieListData.totalPages){
             callback.onMovieListError("You're already in the last page")
             return
         }
 
-        if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
+        if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo) {
 
-//            callback.onMovieListReady(movieListData)
+            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
             return
         }
         lastUsedFun = 2
 
-        // loadingBar.show()
+        //   loadingBar.show()
         apiServices.doGetMovieByRate(apiKey, page = page)
             .enqueue(object : Callback<MovieListResponse> {
 
@@ -165,16 +165,28 @@ object LocalRepo {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
                         if (!addInfo) {
+                            if(!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
+                                mDatabase.getMovieDao().deleteAllMovies()
                             movieListData = response.body()!!
+                            movieListLocalData = mapper.mapToMovieListUi(movieListData)
+                            movieListLocalData.forEach {
+                                mDatabase.getMovieDao().addMovies(it)
+                            }
+                            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
                         } else if (addInfo) {
-                            prevMovieListData = movieListData
+//                            prevMovieListData = movieListData
                             movieListData = response.body()!!
-                            prevMovieListData.list.addAll(movieListData.list)
-                            movieListData.list = prevMovieListData.list
+//                            prevMovieListData.list.addAll(movieListData.list)
+                            movieListLocalData = mapper.mapToMovieListUi(movieListData)
+//                            movieListData.list = prevMovieListData.list
+                            movieListLocalData.forEach {
+                                mDatabase.getMovieDao().addMovies(it)
+                            }
+                            println("I am calling back the popular movie list, with addInfo as $addInfo")
+                            callback.onMovieListReady(movieListLocalData, true)
                         }
-//                        callback.onMovieListReady(movieListData)
-                        //   loadingBar.hide()
-                    } else if (response.code() in 400..404) {
+                        //    loadingBar.hide()
+                    } else if (response.code() in 400..600) {
 
                         val msg = "The movies didn't load properly from the API ${response.code()}"
                         callback.onMovieListError(msg)
@@ -185,9 +197,8 @@ object LocalRepo {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
+                    callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
                 }
-
-
             })
 
     }

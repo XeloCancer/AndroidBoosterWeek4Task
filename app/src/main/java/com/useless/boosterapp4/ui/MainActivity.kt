@@ -101,6 +101,16 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 top_rated_button.id -> {
+                    addInfo = false
+                    movieViewModel.movieLiveData.observe(this, {
+                        onMovieListReady(it, addInfo)
+                    })
+
+                    movieViewModel.onError.observe(this,{
+                        onMovieListError(it)
+                    })
+                    firstTime = true
+                    movieViewModel.loadMovieData(page, false)
 
                     movieViewModel.loadMovieData(page, false)
 
