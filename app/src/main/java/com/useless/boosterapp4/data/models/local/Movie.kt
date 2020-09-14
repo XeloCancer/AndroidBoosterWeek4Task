@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 
 //Re-check if we need anything else from Movie from the API, we already got the bare minimum for the design.
 
-//@Entity(tableName = "movies_table", indices = [Index(value = ["title", "posterPath"], unique = true)])
-@Entity(tableName = "movies_table")
+@Entity(tableName = "movies_table", indices = [Index(value = ["title", "posterPath"], unique = true)])
+//@Entity(tableName = "movies_table")
 data class Movie(
         @PrimaryKey(autoGenerate = true)
         val dbID : Int? = null,

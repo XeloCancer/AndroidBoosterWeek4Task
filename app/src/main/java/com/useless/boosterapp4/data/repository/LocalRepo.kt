@@ -102,6 +102,8 @@ object LocalRepo {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
                         if (!addInfo) {
+                            if(!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
+                                mDatabase.getMovieDao().deleteAllMovies()
                             movieListData = response.body()!!
                             movieListLocalData = mapper.mapToMovieListUi(movieListData)
                             movieListLocalData.forEach {
