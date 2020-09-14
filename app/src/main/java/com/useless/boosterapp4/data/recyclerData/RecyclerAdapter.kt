@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.ui.MovieDetails
+import com.useless.boosterapp4.ui.MovieViewModel
 
-class RecyclerAdapter (private val movieListData: List<Movie>?,
-                       private val listOfMovies: List<Movie>,
-                       private val responseInterface: PageControl
-): RecyclerView.Adapter<MovieViewHolder>(){
+class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
+): RecyclerView.Adapter<MovieViewHolder>(), MovieViewModel.PageControl{
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent. context)
@@ -27,7 +27,7 @@ class RecyclerAdapter (private val movieListData: List<Movie>?,
         holder.movieTitle.text = movie.title
         holder.rating.text = "${(movie.voteAvg * 10).toInt()}%"
         holder.ratingBar.progress = (movie.voteAvg * 10).toInt()
-        System.out.println("Position is $position, and Item count is $itemCount")
+        println("Position is $position, and Item count is $itemCount")
 
         //Creates a bundle of data to pass to the activity
         val bundle : Bundle = Bundle()
@@ -49,14 +49,14 @@ class RecyclerAdapter (private val movieListData: List<Movie>?,
         return listOfMovies.size ?: 0
     }
 
-    fun addData(newMovieList: List<Movie>){
-    //TODO: add newMovieList to old
-    notifyDataSetChanged()
+    private fun addData(newMovieList: List<Movie>){
+        listOfMovies.addAll(newMovieList)
+        notifyDataSetChanged()
     }
 
-    interface PageControl{
-        fun nextPage(page: Int)
-
+    override fun nextPage(movieList: List<Movie>) {
+        addData(movieList)
     }
+
 }
 

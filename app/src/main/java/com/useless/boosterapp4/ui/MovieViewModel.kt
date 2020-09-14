@@ -10,9 +10,7 @@ import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MovieViewModel (application: Application): AndroidViewModel(application),
-    LocalRepo.MovieListCallback, LocalRepo.MovieCallback, RecyclerAdapter.PageControl {
-
-
+    LocalRepo.MovieListCallback, LocalRepo.MovieCallback {
 
     companion object{
         var isLoading = false
@@ -53,7 +51,7 @@ class MovieViewModel (application: Application): AndroidViewModel(application),
         }
     }
 
-    override fun nextPage(page: Int) {
+    private fun nextPage(page: Int) {
         LocalRepo.requestLastFun(this@MovieViewModel, page, true)
     }
 
@@ -76,5 +74,8 @@ class MovieViewModel (application: Application): AndroidViewModel(application),
         _onError.value = errorMsg
     }
 
+    interface PageControl{
+        fun nextPage(movieList: List<Movie>)
+    }
 
 }

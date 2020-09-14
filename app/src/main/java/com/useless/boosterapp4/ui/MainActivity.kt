@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.data.models.local.Movie
-import com.useless.boosterapp4.data.repository.LocalRepo
 import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(),
-    RecyclerAdapter.PageControl {
+class MainActivity : AppCompatActivity() {
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
 
@@ -30,13 +28,13 @@ class MainActivity : AppCompatActivity(),
 
     private var addInfo: Boolean = false
     private var firstTime: Boolean = true
-    private lateinit var adapter: RecyclerAdapter
+    lateinit var adapter: RecyclerAdapter
 
     //private lateinit var moviesAdapter: RecyclerAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var page : Int = 1
 
-    override fun nextPage(page: Int){
+    fun nextPage(page: Int){
         addInfo = true
         println(" THE FIRSTTIME BOOLEAN IS $firstTime")
         movieViewModel.loadMovieData(page, true)
@@ -129,20 +127,19 @@ class MainActivity : AppCompatActivity(),
 
     }
 
-    fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
+    private fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
         val listOfMovies: List<Movie> = movieListData
-        println("The call back is in the MainActivity dum dum !")
         if(firstTime){
+            println("The call back is in the MainActivity and it's in firstTime and it's $firstTime")
             firstTime = false
             adapter = RecyclerAdapter(
-                movieListData,
-                listOfMovies,
-                this@MainActivity
+                listOfMovies as ArrayList<Movie>
             )
             Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
             movie_list_recycler_view.adapter = adapter
         }else if(addInfo){
-            adapter.addData(listOfMovies)
+            println("The call back is in the MainActivity and it's in addInfo and it's $addInfo")
+            adapter.nextPage(listOfMovies)
         }
 
         listenForNextPage()
@@ -152,13 +149,14 @@ class MainActivity : AppCompatActivity(),
         movie_list_recycler_view.addOnScrollListener(object: RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if(!movie_list_recycler_view.canScrollVertically(1) && !MovieViewModel.isLoading){
+                    println("I am Adel and I am sending nextPage(page = $page)")
                     nextPage(++page)
                 }
             }
         })
     }
 
-    fun onMovieListError(errorMsg: String) {
+    private fun onMovieListError(errorMsg: String) {
         Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
     }
 
