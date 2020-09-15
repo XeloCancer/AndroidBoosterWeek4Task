@@ -8,9 +8,9 @@
 
     <ImageButton
         android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="12dp"
         android:src="@drawable/ic_baseline_arrow_back_24"
         android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="@id/logo_details"
@@ -32,7 +32,8 @@
         android:id="@+id/movie_poster_detail"
         android:layout_width="122dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
         android:padding="2dp"
         android:background="#1B4C80"
         tools:src="@drawable/inception"
@@ -40,7 +41,7 @@
         android:adjustViewBounds="true"
         android:elevation="2dp"
         app:layout_constraintTop_toBottomOf="@id/logo_details"
-        app:layout_constraintStart_toStartOf="@id/back_button"/>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/movie_name"
@@ -69,25 +70,52 @@
         app:layout_constraintTop_toBottomOf="@id/release_date"
         app:layout_constraintBottom_toBottomOf="@id/movie_poster_detail"/>
 
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:scrollbarSize="2dp"
-        app:layout_constraintTop_toBottomOf="@id/movie_poster_detail"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="231dp"
+        android:layout_above="@+id/bottom_nav"
+        android:layout_marginBottom="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-3dp">
 
-        <com.codesgood.views.JustifiedTextView
-            android:id="@+id/movie_overview"
+        <ScrollView
+            android:id="@+id/scrollView3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:text="Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious."
-            android:textSize="16sp"
-            android:textColor="#9A9A9A"/>
+            android:layout_height="207dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="24dp"
+            android:scrollbarSize="15dp"
+            tools:ignore="MissingConstraints">
 
-    </ScrollView>
+            <com.codesgood.views.JustifiedTextView
+                android:id="@+id/movie_overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:scrollY="@dimen/cardview_compat_inset_shadow"
+                android:scrollbarSize="15dp"
+                android:scrollbars="vertical"
+                android:textColor="#9A9A9A"
+                android:textSize="16sp"
+                tools:text="Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious.Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: &quot;inception&quot;, the implantation of another person's idea into a target's subconscious." />
+
+        </ScrollView>
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="1"
+        android:background="#00FFFFFF"
+        android:focusable="auto"
+        android:focusableInTouchMode="false"
+        app:itemIconTint="#1d74a6"
+        app:itemTextColor="#1d74a6"
+        app:labelVisibilityMode="selected"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
