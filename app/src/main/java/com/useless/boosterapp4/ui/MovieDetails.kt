@@ -74,8 +74,6 @@ class MovieDetails : AppCompatActivity() {
     private  fun makeCurrentFragment(fragment : Fragment) =
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.fragment_container,fragment)
-          //  var we : PassData
-       //    we = (PassData) fragment
             commit()
    }
    interface PassData {
