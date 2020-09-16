@@ -4,13 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.codesgood.views.JustifiedTextView
+import com.useless.boosterapp4.MovieDetails
 import com.useless.boosterapp4.R
-import kotlinx.android.synthetic.main.description_fragment.*
 
-class ReviewFragment : Fragment() {
+class ReviewFragment : Fragment() , MovieDetails.PassData {
+    private lateinit var moveOver2 : JustifiedTextView
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.review_fragment,container,false)
+        return inflater.inflate(R.layout.fragment_review,container,false)
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        moveOver2 = view.findViewById<JustifiedTextView>(R.id.movie_overview2)
+    }
+    override fun IPassData(data: String?) {
+        if (data != null) {
+            moveOver2.text = data
+        }
+        else Toast.makeText(context, "No", Toast.LENGTH_SHORT).show()
     }
 }

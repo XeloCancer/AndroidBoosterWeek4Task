@@ -22,6 +22,7 @@ data class Movie(
         val voteAvg: Double,
         val voteCnt: Int,
         val overview : String ="",
+
         val page : Int,
         val totalPages : Int,
 )

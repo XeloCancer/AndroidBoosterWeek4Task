@@ -12,6 +12,7 @@ import com.useless.boosterapp4.fragments.DescriptionFragment
 import com.useless.boosterapp4.fragments.ReviewFragment
 import com.useless.boosterapp4.fragments.TrailerFragment
 import kotlinx.android.synthetic.main.fragment_description.*
+import kotlinx.android.synthetic.main.fragment_trailer.*
 import kotlinx.android.synthetic.main.movie_details.*
 import java.util.*
 
@@ -38,8 +39,13 @@ class MovieDetails : AppCompatActivity() {
                     makeCurrentFragment(descriptionFragment)
                     descriptionFragment.IPassData(intent.getStringExtra("overview"))
                 }
-                R.id.reviewItem -> makeCurrentFragment(reviewFragment)
-                R.id.trailerItem -> makeCurrentFragment(trailerFragment)
+                R.id.reviewItem -> {
+                    makeCurrentFragment(reviewFragment)
+                    reviewFragment.IPassData(intent.getStringExtra("review"))
+                }
+                R.id.trailerItem -> {
+                    makeCurrentFragment(trailerFragment)
+                    }
             }
             true
         }
