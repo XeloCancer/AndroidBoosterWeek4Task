@@ -17,10 +17,6 @@ data class MovieResponse (
     val voteCnt: Int,
     @SerializedName("title")
     val movie_title: String,
-    @SerializedName("review")
-    val review: String,
-    @SerializedName("Video")
-    val video: String,
     @SerializedName("overview")
     val overview: String
 

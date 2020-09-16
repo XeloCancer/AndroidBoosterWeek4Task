@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.useless.boosterapp4.data.models.local.Movie
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.useless.boosterapp4.MovieDetails
+import com.useless.boosterapp4.ui.MovieDetails
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.ui.MovieViewModel
 

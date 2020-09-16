@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.codesgood.views.JustifiedTextView
-import com.useless.boosterapp4.MovieDetails
+import com.useless.boosterapp4.ui.MovieDetails
 import com.useless.boosterapp4.R
 
 class ReviewFragment : Fragment() , MovieDetails.PassData {
@@ -17,9 +17,9 @@ class ReviewFragment : Fragment() , MovieDetails.PassData {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        moveOver2 = view.findViewById<JustifiedTextView>(R.id.movie_overview2)
+        moveOver2 = view.findViewById<JustifiedTextView>(R.id.reviewText)
     }
-    override fun IPassData(data: String?) {
+    override fun iPassData(data: String?) {
         if (data != null) {
             moveOver2.text = data
         }

@@ -20,11 +20,6 @@ interface ApiInterface {
                        @Query("api_key") apiKey: String
     ): Call<MovieResponse>
 
-//    @GET("movie/{movie_id}")
-//    fun doGetMovieVideo(@Path("movie_id") movieID: Int,
-//                       @Query("api_key") apiKey: String
-//    ): Call<MovieResponse>
-
     @GET("movie/top_rated")
     fun doGetMovieByRate(@Query("api_key")apiKey: String,
                          @Query("page") page: Int = 1

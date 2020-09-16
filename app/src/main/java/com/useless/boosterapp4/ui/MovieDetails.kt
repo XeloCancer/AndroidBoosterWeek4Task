@@ -1,4 +1,4 @@
-package com.useless.boosterapp4
+package com.useless.boosterapp4.ui
 
 import android.os.Build
 import android.os.Bundle
@@ -6,13 +6,11 @@ import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
-import com.codesgood.views.JustifiedTextView
 import com.squareup.picasso.Picasso
+import com.useless.boosterapp4.R
 import com.useless.boosterapp4.fragments.DescriptionFragment
 import com.useless.boosterapp4.fragments.ReviewFragment
 import com.useless.boosterapp4.fragments.TrailerFragment
-import kotlinx.android.synthetic.main.fragment_description.*
-import kotlinx.android.synthetic.main.fragment_trailer.*
 import kotlinx.android.synthetic.main.movie_details.*
 import java.util.*
 
@@ -31,24 +29,26 @@ class MovieDetails : AppCompatActivity() {
         val reviewFragment = ReviewFragment()
         val trailerFragment = TrailerFragment()
 
-        makeCurrentFragment(descriptionFragment)
-
         bottom_nav.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.descriptionItem -> {
                     makeCurrentFragment(descriptionFragment)
-                    descriptionFragment.IPassData(intent.getStringExtra("overview"))
+                    descriptionFragment.iPassData(intent.getStringExtra("overview"))
                 }
                 R.id.reviewItem -> {
                     makeCurrentFragment(reviewFragment)
-                    reviewFragment.IPassData(intent.getStringExtra("review"))
+                    reviewFragment.iPassData(intent.getStringExtra("review item should be here, waiting for Adel to add them in API"))
                 }
                 R.id.trailerItem -> {
                     makeCurrentFragment(trailerFragment)
+                    trailerFragment.iPassData(intent.getStringExtra("video item should be here, waiting for Adel to add them in API"))
                     }
             }
             true
         }
+        makeCurrentFragment(reviewFragment)
+        makeCurrentFragment(trailerFragment)
+        makeCurrentFragment(descriptionFragment)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             this.display!!.getRealMetrics(displayMetrics)
@@ -83,6 +83,7 @@ class MovieDetails : AppCompatActivity() {
             commit()
    }
    interface PassData {
-       fun IPassData (data: String?)
+       fun iPassData (data: String?)
     }
+
 }

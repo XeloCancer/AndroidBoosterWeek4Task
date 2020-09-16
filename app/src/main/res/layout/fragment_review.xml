@@ -14,10 +14,11 @@
         android:scrollbarSize="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_centerInParent="true">
 
         <com.codesgood.views.JustifiedTextView
-            android:id="@+id/movie_overview2"
+            android:id="@+id/reviewText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#9A9A9A"
