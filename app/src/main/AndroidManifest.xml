@@ -12,6 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".ui.SideNavActivity"
+            android:label="@string/title_activity_side_nav"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Side_nav"
+            android:label="@string/title_activity_side_nav"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.MovieDetails" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>

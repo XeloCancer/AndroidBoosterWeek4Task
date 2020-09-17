@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.nav_activity_main)
 
         movieViewModel.movieLiveData.observe(this, {
             onMovieListReady(it, true)
