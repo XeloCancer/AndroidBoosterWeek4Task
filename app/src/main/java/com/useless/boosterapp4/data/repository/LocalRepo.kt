@@ -8,6 +8,7 @@ import com.useless.boosterapp4.data.MoviesDatabase.MovieMapper
 import com.useless.boosterapp4.data.models.local.Movie
 import com.useless.boosterapp4.data.models.remote.MovieListResponse
 import com.useless.boosterapp4.data.models.remote.MovieResponse
+import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.network.APIClient
 import com.useless.boosterapp4.data.network.ApiInterface
 import retrofit2.Call
@@ -35,6 +36,7 @@ object LocalRepo {
     private lateinit var prevMovieListData: MovieListResponse
     private lateinit var movieData: MovieResponse
     private lateinit var movieListLocalData: List<Movie>
+    private lateinit var videoData: MovieVideos
 
     fun requestLastFun(
         callback: MovieListCallback,
@@ -200,7 +202,29 @@ object LocalRepo {
                     callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
                 }
             })
+    }
 
+    fun requestMovieVideos(callback: MovieVideosCallback, movieID: Int){
+        apiServices.doGetMovieVideos(movieID, apiKey).enqueue(object: Callback<MovieVideos>{
+            override fun onResponse(
+                call: Call<MovieVideos>,
+                response: Response<MovieVideos>
+            ) {
+                if(response.isSuccessful){
+                    videoData = response.body()!!
+                    callback.onMovieVideosReady(videoData)
+                }else if (response.code() in 400..404) {
+                    val msg = "The videos didn't load properly from the API"
+                    callback.onMovieVideosError(msg)
+                }
+            }
+            override fun onFailure(call: Call<MovieVideos>, t: Throwable) {
+                t.printStackTrace()
+                val msg = "Error while getting video data"
+                callback.onMovieVideosError(msg)
+            }
+
+        })
     }
 
     fun createDatabase(context: Context) {
@@ -217,5 +241,9 @@ object LocalRepo {
         fun onMovieError(errorMsg: String)
     }
 
+    interface MovieVideosCallback{
+        fun onMovieVideosReady(videoData: MovieVideos)
+        fun onMovieVideosError(errorMsg: String)
+    }
 
 }

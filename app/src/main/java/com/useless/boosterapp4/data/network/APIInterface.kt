@@ -2,6 +2,7 @@ package com.useless.boosterapp4.data.network
 
 import com.useless.boosterapp4.data.models.remote.MovieListResponse
 import com.useless.boosterapp4.data.models.remote.MovieResponse
+import com.useless.boosterapp4.data.models.remote.MovieVideos
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -24,4 +25,9 @@ interface ApiInterface {
     fun doGetMovieByRate(@Query("api_key")apiKey: String,
                          @Query("page") page: Int = 1
     ): Call<MovieListResponse>
+
+    @GET("movie/{id}/videos")
+    fun doGetMovieVideos(@Path("id") movieID: Int,
+                         @Query("api_key") apiKey: String
+    ): Call<MovieVideos>
 }
