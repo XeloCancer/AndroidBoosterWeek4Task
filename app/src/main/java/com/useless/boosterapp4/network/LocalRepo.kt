@@ -22,6 +22,7 @@ object LocalRepo {
     private lateinit var movieListData: MovieList
     private lateinit var prevMovieListData: MovieList
     private lateinit var movieData: Movie
+    private lateinit var videoData: MovieVideos
 
     fun requestLastFun(callback: MovieListCallback, loadingBar : ProgressBar, page : Int, addInfo: Boolean){
 
@@ -91,7 +92,6 @@ object LocalRepo {
                     call: Call<Movie>,
                     response: Response<Movie>
                 ) {
-                    println("OnResponseCalled")
                     if (response.isSuccessful) {
                         movieData = response.body()!!
                         callback.onMovieReady(movieData)
@@ -156,12 +156,22 @@ object LocalRepo {
 
     fun requestMovieVideos(callback: MovieVideosCallback, movieID: Int){
         apiServices.doGetMovieVideos(movieID, apiKey).enqueue(object: Callback<MovieVideos>{
-            override fun onResponse(call: Call<MovieVideos>, response: Response<MovieVideos>) {
-                TODO("Not yet implemented")
+            override fun onResponse(
+                call: Call<MovieVideos>,
+                response: Response<MovieVideos>
+            ) {
+                if(response.isSuccessful){
+                    videoData = response.body()!!
+                    callback.onMovieVideosReady(videoData)
+                }else if (response.code() in 400..404) {
+                    val msg = "The videos didn't load properly from the API"
+                    callback.onMovieVideosError(msg)
+                }
             }
-
             override fun onFailure(call: Call<MovieVideos>, t: Throwable) {
-                TODO("Not yet implemented")
+                t.printStackTrace()
+                val msg = "Error while getting video data"
+                callback.onMovieVideosError(msg)
             }
 
         })
