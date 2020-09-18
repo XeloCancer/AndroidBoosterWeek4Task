@@ -13,17 +13,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 object LocalRepo {
-/*
-    var seconds: Int = 0
-
-    private val timer = object: CountDownTimer(10000, 1000) {
-        override fun onTick(millisUntilFinished: Long) {
-            seconds = (millisUntilFinished / 1000).toInt()
-        }
-        override fun onFinish() {
-        }
-    }
-*/
     private val apiServices: ApiInterface by lazy {
         APIClient.getClient().create(ApiInterface::class.java)
     }
@@ -119,7 +108,7 @@ object LocalRepo {
             })
         }
 
-    fun requestTopRatedMovieList(callback: MovieListCallback,  page : Int, addInfo: Boolean = false){
+    fun requestTopRatedMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false){
         if (this::movieListData.isInitialized && lastUsedFun == 2 && !addInfo) {
 
             callback.onMovieListReady(movieListData)
@@ -165,6 +154,18 @@ object LocalRepo {
 
     }
 
+    fun requestMovieVideos(callback: MovieVideosCallback, movieID: Int){
+        apiServices.doGetMovieVideos(movieID, apiKey).enqueue(object: Callback<MovieVideos>{
+            override fun onResponse(call: Call<MovieVideos>, response: Response<MovieVideos>) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onFailure(call: Call<MovieVideos>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
 
     interface MovieListCallback{
         fun onMovieListReady(movieData: MovieList)
@@ -174,5 +175,10 @@ object LocalRepo {
     interface MovieCallback{
         fun onMovieReady(movieData: Movie)
         fun onMovieError(errorMsg: String)
+    }
+
+    interface MovieVideosCallback{
+        fun onMovieVideosReady(videoData: MovieVideos)
+        fun onMovieVideosError(errorMsg: String)
     }
 }
