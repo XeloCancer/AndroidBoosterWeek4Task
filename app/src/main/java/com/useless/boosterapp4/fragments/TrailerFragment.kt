@@ -14,7 +14,6 @@ import com.codesgood.views.JustifiedTextView
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.ui.MovieDetails
 
-
 class TrailerFragment : Fragment() , MovieDetails.PassData{
     private lateinit var trailer : VideoView
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -28,6 +27,7 @@ class TrailerFragment : Fragment() , MovieDetails.PassData{
     override fun iPassData(data: String?) {
         if (data != null) {
             trailer.setVideoPath(data)
+            trailer.start()
         }
         else Toast.makeText(context, "No", Toast.LENGTH_SHORT).show()
     }

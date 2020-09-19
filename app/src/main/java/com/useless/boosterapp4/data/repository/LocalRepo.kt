@@ -1,8 +1,10 @@
 package com.useless.boosterapp4.data.repository
 
 import android.content.Context
+import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.view.menu.ActionMenuItemView
 import com.useless.boosterapp4.data.MoviesDatabase.MDatabase
 import com.useless.boosterapp4.data.MoviesDatabase.MovieMapper
 import com.useless.boosterapp4.data.models.local.Movie
@@ -11,6 +13,7 @@ import com.useless.boosterapp4.data.models.remote.MovieResponse
 import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.network.APIClient
 import com.useless.boosterapp4.data.network.ApiInterface
+import com.useless.boosterapp4.data.recyclerData.MovieViewHolder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,7 +33,7 @@ object LocalRepo {
         APIClient.getClient().create(ApiInterface::class.java)
     }
 
-    private const val apiKey = "6637f7d017283c784ff6746c01f71453"
+
     private var lastUsedFun: Int = -1
     private lateinit var movieListData: MovieListResponse
     private lateinit var prevMovieListData: MovieListResponse
@@ -94,7 +97,7 @@ object LocalRepo {
         lastUsedFun = 1
 
         //   loadingBar.show()
-        apiServices.doGetMoviesList(apiKey, page = page)
+        apiServices.doGetMoviesList( page = page)
             .enqueue(object : Callback<MovieListResponse> {
 
                 override fun onResponse(
@@ -157,7 +160,7 @@ object LocalRepo {
         lastUsedFun = 2
 
         //   loadingBar.show()
-        apiServices.doGetMovieByRate(apiKey, page = page)
+        apiServices.doGetMovieByRate(page = page)
             .enqueue(object : Callback<MovieListResponse> {
 
                 override fun onResponse(
@@ -204,15 +207,19 @@ object LocalRepo {
             })
     }
 
-    fun requestMovieVideos(callback: MovieVideosCallback, movieID: Int){
-        apiServices.doGetMovieVideos(movieID, apiKey).enqueue(object: Callback<MovieVideos>{
+    fun requestMovieVideos(
+        callback: MovieVideosCallback,
+        movieID: Int,
+        itemView: View
+    ){
+        apiServices.doGetMovieVideos(movieID).enqueue(object: Callback<MovieVideos>{
             override fun onResponse(
                 call: Call<MovieVideos>,
                 response: Response<MovieVideos>
             ) {
                 if(response.isSuccessful){
                     videoData = response.body()!!
-                    callback.onMovieVideosReady(videoData)
+                    callback.onMovieVideosReady(videoData, itemView)
                 }else if (response.code() in 400..404) {
                     val msg = "The videos didn't load properly from the API"
                     callback.onMovieVideosError(msg)
@@ -242,7 +249,7 @@ object LocalRepo {
     }
 
     interface MovieVideosCallback{
-        fun onMovieVideosReady(videoData: MovieVideos)
+        fun onMovieVideosReady(videoData: MovieVideos, itemView: View)
         fun onMovieVideosError(errorMsg: String)
     }
 

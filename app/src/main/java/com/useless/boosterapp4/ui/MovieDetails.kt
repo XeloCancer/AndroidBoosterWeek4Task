@@ -41,7 +41,7 @@ class MovieDetails : AppCompatActivity() {
                 }
                 R.id.trailerItem -> {
                     makeCurrentFragment(trailerFragment)
-                    trailerFragment.iPassData(intent.getStringExtra("video item should be here, waiting for Adel to add them in API"))
+                    trailerFragment.iPassData(intent.getStringExtra("videoLink"))
                     }
             }
             true
@@ -84,6 +84,5 @@ class MovieDetails : AppCompatActivity() {
    }
    interface PassData {
        fun iPassData (data: String?)
-    }
-
+   }
 }

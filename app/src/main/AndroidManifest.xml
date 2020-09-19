@@ -20,7 +20,7 @@
             android:name=".Side_nav"
             android:label="@string/title_activity_side_nav"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.MovieDetails" />
+        <activity android:name=".ui.MovieDetails" android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -18,6 +18,7 @@ data class Movie(
         @ColumnInfo(name = "posterPath")
         val posterPath: String ="",
         val lang: String ="",
+        val vidLink: String="",
         val date: String ="",
         val voteAvg: Double,
         val voteCnt: Int,
