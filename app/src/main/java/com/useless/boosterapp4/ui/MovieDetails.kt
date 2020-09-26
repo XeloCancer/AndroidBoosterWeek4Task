@@ -29,6 +29,15 @@ class MovieDetails : AppCompatActivity() {
         val reviewFragment = ReviewFragment()
         val trailerFragment = TrailerFragment()
 
+        fav_button.setOnClickListener {
+            //if is fav, make it empty
+            fav_button.setImageResource(R.drawable.ic_star_empty)
+            //todo: set fav boolean in this movie to be false
+            //if isn't fav, make it full
+            fav_button.setImageResource(R.drawable.ic_star_full)
+            //todo: set fav boolean in this movie to be true
+        }
+
         bottom_nav.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.descriptionItem -> {
