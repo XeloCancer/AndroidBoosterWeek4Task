@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 30
@@ -33,6 +34,10 @@ android {
 }
 
 dependencies {
+
+    implementation "androidx.room:room-runtime:2.2.5"
+    kapt "androidx.room:room-compiler:2.2.5"
+
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     //Live Data
@@ -58,6 +63,7 @@ dependencies {
 
     implementation "androidx.recyclerview:recyclerview:1.2.0-alpha05"
     implementation 'com.codesgood:justifiedtextview:1.1.0'
-    implementation"androidx.room:room-runtime:2.2.5"
+
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
 }

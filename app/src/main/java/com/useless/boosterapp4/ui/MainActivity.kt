@@ -10,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.useless.boosterapp4.R
-import com.useless.boosterapp4.RecyclerAdapter
-import com.useless.boosterapp4.network.LocalRepo
+import com.useless.boosterapp4.data.models.local.Movie
+import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
-    RecyclerAdapter.PageControl {
-
+class MainActivity : AppCompatActivity() {
     private lateinit var colorAnimLightMostPopular : ObjectAnimator
     private lateinit var colorAnimDimMostPopular : ObjectAnimator
 
@@ -27,19 +26,19 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
     private val lightColor : Int = Color.parseColor("#A0A0A0")
     private val dimColor : Int = Color.parseColor("#F0F0F0")
 
+    private var addInfo: Boolean = false
+    private var firstTime: Boolean = true
+    lateinit var adapter: RecyclerAdapter
+
+    //private lateinit var moviesAdapter: RecyclerAdapter
     private lateinit var layoutManager: LinearLayoutManager
     private var page : Int = 1
 
-    override fun nextPage(movieListData: List<Movie>){
-        var pageNum = movieListData[0].page
-        var totalPages = movieListData[0].totalPages
-        if(pageNum == totalPages){
-            Toast.makeText(applicationContext, "You're already at the last page", Toast.LENGTH_SHORT).show()
-            return
-        }else{
-            page++
-            LocalRepo.requestLastFun(this@MainActivity, loading_bar, page, true)
-        }
+    fun nextPage(page: Int){
+        addInfo = true
+        println(" THE FIRSTTIME BOOLEAN IS $firstTime")
+        movieViewModel.loadMovieData(page, true)
+
     }
     private val movieViewModel : MovieViewModel by viewModels()
 
@@ -47,29 +46,21 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-     //   requestMovieList(this@MainActivity, page)
-
         movieViewModel.movieLiveData.observe(this, {
-            onMovieListReady(it)
+            onMovieListReady(it, true)
+            println("The data has changed Adel!!")
         })
 
         movieViewModel.onError.observe(this,{
             onMovieListError(it)
         })
 
-        movieViewModel.loadMovieData(page)
+        movieViewModel.loadMovieData(page, false)
 
-
-           layoutManager = GridLayoutManager(this, 2)
+        layoutManager = GridLayoutManager(this, 2)
 
         movie_list_recycler_view.layoutManager = layoutManager
 
-        movie_list_recycler_view.adapter =
-            RecyclerAdapter(
-                null,
-                null,
-                this@MainActivity
-            )
 
         //TODO To call data on app launch. There is definitely a better way to do this so if you have ideas, please do it
 
@@ -78,15 +69,16 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
             page = 1
             when(group.checkedButtonId){
                 most_popular_button.id -> {
+                    addInfo = false
                     movieViewModel.movieLiveData.observe(this, {
-                        onMovieListReady(it)
+                        onMovieListReady(it, addInfo)
                     })
 
                     movieViewModel.onError.observe(this,{
                         onMovieListError(it)
                     })
-
-                    movieViewModel.loadMovieData(page)
+                    firstTime = true
+                    movieViewModel.loadMovieData(page, false, changing = true)
 
             //    requestMovieList(this@MainActivity, page)
                     //To animate color change for different buttons
@@ -109,8 +101,16 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
                 }
 
                 top_rated_button.id -> {
+                    addInfo = false
+                    movieViewModel.movieLiveData.observe(this, {
+                        onMovieListReady(it, addInfo)
+                    })
 
-                    LocalRepo.requestTopRatedMovieList(this@MainActivity, page)
+                    movieViewModel.onError.observe(this,{
+                        onMovieListError(it)
+                    })
+                    firstTime = true
+                    movieViewModel.loadMovieData(page, false, false, changing = true)
 
                     //To animate color change for different buttons
                     colorAnimLightTopRated = ObjectAnimator.ofInt(
@@ -132,47 +132,39 @@ class MainActivity : AppCompatActivity(), LocalRepo.MovieListCallback,
                 }
             }
         }
-/*      COMMENTED TO TEST A MORE STABLE WAY OF SHOWING NEXT PAGE
-        movie_list_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy > 0) { //check for scroll down
-                    val visibleItemCount = layoutManager.childCount
-                    val totalItemCount = layoutManager.getItemCount()
-                    val pastVisiblesItems = layoutManager.findFirstVisibleItemPosition()
 
-                        if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
-                            page++
-                            LocalRepo.requestLastFun(this@MainActivity, loading_bar, page, true)
-                        }
+    }
+
+    private fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
+        val listOfMovies: List<Movie> = movieListData
+        if(firstTime){
+            println("The call back is in the MainActivity and it's in firstTime and it's $firstTime")
+            firstTime = false
+            adapter = RecyclerAdapter(
+                listOfMovies as ArrayList<Movie>
+            )
+            Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
+            movie_list_recycler_view.adapter = adapter
+        }else if(addInfo){
+            println("The call back is in the MainActivity and it's in addInfo and it's $addInfo")
+            adapter.nextPage(listOfMovies)
+        }
+
+        listenForNextPage()
+    }
+
+    private fun listenForNextPage(){
+        movie_list_recycler_view.addOnScrollListener(object: RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if(!movie_list_recycler_view.canScrollVertically(1) && !MovieViewModel.isLoading){
+                    println("I am Adel and I am sending nextPage(page = $page)")
+                    nextPage(++page)
                 }
             }
-        })*/
-
+        })
     }
 
-
-
-
-    fun prevPage(pageNum: Int){
-        if(pageNum == 1){
-            Toast.makeText(applicationContext, "You're already at the first page", Toast.LENGTH_SHORT).show()
-            return
-        }else{
-            //TODO: call API with same data but query page = pageNum - 1
-        }
-    }
-
-    override fun onMovieListReady(movieData: List<Movie>) {
-        Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
-        movie_list_recycler_view.adapter =
-            RecyclerAdapter(
-                movieData,
-                movieData,
-                this@MainActivity
-            )
-    }
-
-    override fun onMovieListError(errorMsg: String) {
+    private fun onMovieListError(errorMsg: String) {
         Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_LONG).show()
     }
 
