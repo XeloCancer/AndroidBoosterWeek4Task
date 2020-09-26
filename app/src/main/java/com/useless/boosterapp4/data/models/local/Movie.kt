@@ -25,4 +25,5 @@ data class Movie(
         val overview : String ="",
         val page : Int,
         val totalPages : Int,
+        val fav : Boolean = false
 )

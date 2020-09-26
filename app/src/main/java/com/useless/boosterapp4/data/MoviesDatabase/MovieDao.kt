@@ -10,4 +10,6 @@ interface MovieDao {
     fun getAllMovies(): List<Movie>
     @Query("DELETE FROM movies_table")
     fun deleteAllMovies()
+    @Query("SELECT * FROM movies_table where id = :movieId")
+    fun getMovieFromDao(movieId: Int): Movie
 }
