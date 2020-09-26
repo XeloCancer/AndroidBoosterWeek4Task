@@ -18,6 +18,17 @@
         app:layout_constraintStart_toStartOf="parent"
         android:contentDescription="@string/back_button" />
 
+    <ImageButton
+        android:id="@+id/fav_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_star_empty"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@id/logo_details"
+        app:layout_constraintEnd_toStartOf="@id/logo_details"
+        app:layout_constraintTop_toTopOf="@id/logo_details" />
+
     <ImageView
         android:id="@+id/logo_details"
         android:layout_width="48dp"
