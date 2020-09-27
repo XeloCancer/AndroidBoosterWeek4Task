@@ -38,6 +38,7 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
         //Creates a bundle of data to pass to the activity
 
         bundle.clear()
+        bundle.putBoolean("fav", movie.fav)
         bundle.putString("poster_path", movie.posterPath)
         bundle.putString("title", movie.title)
         bundle.putString("release_date", movie.date)

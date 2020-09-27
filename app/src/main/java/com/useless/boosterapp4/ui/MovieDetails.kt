@@ -28,14 +28,21 @@ class MovieDetails : AppCompatActivity() {
         val descriptionFragment = DescriptionFragment()
         val reviewFragment = ReviewFragment()
         val trailerFragment = TrailerFragment()
+        var favMovie: Boolean = intent.getBooleanExtra("fav", false)
+
+        if(favMovie){
+            fav_button.setImageResource(R.drawable.ic_star_full)
+        }
 
         fav_button.setOnClickListener {
-            //if is fav, make it empty
-            fav_button.setImageResource(R.drawable.ic_star_empty)
-            //todo: set fav boolean in this movie to be false
-            //if isn't fav, make it full
-            fav_button.setImageResource(R.drawable.ic_star_full)
-            //todo: set fav boolean in this movie to be true
+            if(favMovie){
+                fav_button.setImageResource(R.drawable.ic_star_empty)
+                favMovie = false //TODO: This only changes the local variable not the database one
+            }
+            if(!favMovie){
+                fav_button.setImageResource(R.drawable.ic_star_full)
+                favMovie = true //TODO: This only changes the local variable not the database one
+            }
         }
 
         bottom_nav.setOnNavigationItemSelectedListener {
