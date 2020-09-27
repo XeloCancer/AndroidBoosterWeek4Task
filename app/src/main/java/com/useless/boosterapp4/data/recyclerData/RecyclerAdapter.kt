@@ -35,19 +35,18 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
         holder.ratingBar.progress = (movie.voteAvg * 10).toInt()
         println("Position is $position, and Item count is $itemCount")
 
-        //Creates a bundle of data to pass to the activity
-
-        bundle.clear()
-        bundle.putBoolean("fav", movie.fav)
-        bundle.putInt("id", movie.id)
-        bundle.putString("poster_path", movie.posterPath)
-        bundle.putString("title", movie.title)
-        bundle.putString("release_date", movie.date)
-        bundle.putString("language", movie.lang)
-        bundle.putString("overview", movie.overview)
-
         //OnClickListener responsible for sending data to the other activity
         holder.itemView.setOnClickListener {
+            //Creates a bundle of data to pass to the activity
+
+            bundle.clear()
+            bundle.putBoolean("fav", movie.fav)
+            bundle.putInt("id", movie.id)
+            bundle.putString("poster_path", movie.posterPath)
+            bundle.putString("title", movie.title)
+            bundle.putString("release_date", movie.date)
+            bundle.putString("language", movie.lang)
+            bundle.putString("overview", movie.overview)
             LocalRepo.requestMovieVideos(this@RecyclerAdapter, movie.id, holder.itemView)
         }
     }
