@@ -50,6 +50,7 @@ object LocalRepo {
         when (lastUsedFun) {
             1 -> requestPopularMovieList(callback, page, addInfo)
             2 -> requestTopRatedMovieList(callback, page, addInfo)
+            3 -> loadFavList(callback, page, addInfo)
         }
     }
 
@@ -217,8 +218,12 @@ object LocalRepo {
         movie.fav = false
         mDatabase.getMovieDao().addMovies(movie)
     }
-    fun loadFavList(callback: MovieListCallback){
-        callback.onMovieListReady(mDatabase.getMovieDao().getFav(), false)
+    fun loadFavList(callback: MovieListCallback, page: Int = 1, addInfo: Boolean = false){
+        lastUsedFun = 3
+        if(addInfo){
+            return
+        }
+        callback.onMovieListReady(mDatabase.getMovieDao().getFav(), addInfo)
     }
 
     fun requestMovieVideos(
