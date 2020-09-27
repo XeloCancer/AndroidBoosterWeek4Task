@@ -8,6 +8,7 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.R
+import com.useless.boosterapp4.data.repository.LocalRepo
 import com.useless.boosterapp4.fragments.DescriptionFragment
 import com.useless.boosterapp4.fragments.ReviewFragment
 import com.useless.boosterapp4.fragments.TrailerFragment
@@ -37,11 +38,11 @@ class MovieDetails : AppCompatActivity() {
         fav_button.setOnClickListener {
             if(favMovie){
                 fav_button.setImageResource(R.drawable.ic_star_empty)
-                favMovie = false //TODO: This only changes the local variable not the database one
+                LocalRepo.removeFromFavList(intent.getIntExtra("id", -465))
             }
             if(!favMovie){
                 fav_button.setImageResource(R.drawable.ic_star_full)
-                favMovie = true //TODO: This only changes the local variable not the database one
+                LocalRepo.addToFavList(intent.getIntExtra("id", -465))
             }
         }
 

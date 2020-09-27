@@ -207,6 +207,17 @@ object LocalRepo {
             })
     }
 
+    fun addToFavList(movieID: Int){
+        var movie: Movie = mDatabase.getMovieDao().getMovieFromDao(movieID)
+        movie.fav = true
+        mDatabase.getMovieDao().addMovies(movie)
+    }
+    fun removeFromFavList(movieID: Int){
+        var movie: Movie = mDatabase.getMovieDao().getMovieFromDao(movieID)
+        movie.fav = false
+        mDatabase.getMovieDao().addMovies(movie)
+    }
+
     fun requestMovieVideos(
         callback: MovieVideosCallback,
         movieID: Int,

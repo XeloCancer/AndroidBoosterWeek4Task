@@ -39,6 +39,7 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
 
         bundle.clear()
         bundle.putBoolean("fav", movie.fav)
+        bundle.putInt("id", movie.id)
         bundle.putString("poster_path", movie.posterPath)
         bundle.putString("title", movie.title)
         bundle.putString("release_date", movie.date)
