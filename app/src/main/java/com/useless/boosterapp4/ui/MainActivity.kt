@@ -16,6 +16,7 @@ import com.useless.boosterapp4.data.models.local.Movie
 import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.models.remote.Video
 import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
+import com.useless.boosterapp4.data.repository.LocalRepo
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -131,6 +132,20 @@ class MainActivity : AppCompatActivity() {
                     colorAnimDimTopRated.setEvaluator(ArgbEvaluator())
                     colorAnimLightTopRated.start()
                     colorAnimDimTopRated.start()
+                }
+
+                favorites_button.id -> {
+                    addInfo = false
+                    movieViewModel.movieLiveData.observe(this, {
+                        onMovieListReady(it, addInfo, VideoListData = emptyList())
+                    })
+
+                    movieViewModel.onError.observe(this,{
+                        onMovieListError(it)
+                    })
+                    firstTime = true
+
+                    movieViewModel.getFavList()
                 }
             }
         }

@@ -12,4 +12,6 @@ interface MovieDao {
     fun deleteAllMovies()
     @Query("SELECT * FROM movies_table where id = :movieId")
     fun getMovieFromDao(movieId: Int): Movie
+    @Query("select * from movies_table where fav = 1") //TODO: Test if 1 = true logically
+    fun getFav(): List<Movie>
 }

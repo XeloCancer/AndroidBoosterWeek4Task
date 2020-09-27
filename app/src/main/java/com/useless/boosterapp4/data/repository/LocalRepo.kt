@@ -169,7 +169,7 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
-                        if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
+                        if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty()) //TODO: Why are we deleting the database in here ?
                             mDatabase.getMovieDao().deleteAllMovies()
                         if (!addInfo) {
                             movieListData = response.body()!!
@@ -216,6 +216,9 @@ object LocalRepo {
         var movie: Movie = mDatabase.getMovieDao().getMovieFromDao(movieID)
         movie.fav = false
         mDatabase.getMovieDao().addMovies(movie)
+    }
+    fun loadFavList(callback: MovieListCallback){
+        callback.onMovieListReady(mDatabase.getMovieDao().getFav(), false)
     }
 
     fun requestMovieVideos(
