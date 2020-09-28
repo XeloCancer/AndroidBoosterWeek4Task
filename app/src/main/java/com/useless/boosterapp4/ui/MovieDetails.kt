@@ -22,13 +22,19 @@ class MovieDetails : AppCompatActivity() {
     private val displayMetrics by lazy {
         DisplayMetrics()
     }
+    private val descriptionFragment by lazy {
+        DescriptionFragment()
+    }
+    private val reviewFragment by lazy {
+        ReviewFragment()
+    }
+    private val trailerFragment by lazy {
+        TrailerFragment()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.movie_details)
-        val descriptionFragment = DescriptionFragment()
-        val reviewFragment = ReviewFragment()
-        val trailerFragment = TrailerFragment()
         var favMovie: Boolean = intent.getBooleanExtra("fav", false)
 
         if(favMovie){
@@ -84,7 +90,7 @@ class MovieDetails : AppCompatActivity() {
         val language : String? = intent.getStringExtra("language")!!.toUpperCase(Locale.ROOT)
        // val overview : String? = intent.getStringExtra("overview")
 
-        Picasso.get().load("https://image.tmdb.org/t/p/w500/${posterPath}").into(movie_poster_detail)
+        Picasso.get().load("https://image.tmdb.org/t/p/w300/${posterPath}").into(movie_poster_detail)
         movie_name.text = HtmlCompat.fromHtml("<b>Title:</b> <br> $title", HtmlCompat.FROM_HTML_MODE_LEGACY)
         release_date.text = HtmlCompat.fromHtml("<b>Release Date:</b> <br> $releaseDate", HtmlCompat.FROM_HTML_MODE_LEGACY)
         languages.text = HtmlCompat.fromHtml("<b>Languages:</b> <br> $language", HtmlCompat.FROM_HTML_MODE_LEGACY)
@@ -92,6 +98,12 @@ class MovieDetails : AppCompatActivity() {
         this.setFinishOnTouchOutside(true)
 
         back_button.setOnClickListener { finish() }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        makeCurrentFragment(descriptionFragment)
+        descriptionFragment.iPassData(intent.getStringExtra("overview"))
     }
 
     private  fun makeCurrentFragment(fragment : Fragment) =
