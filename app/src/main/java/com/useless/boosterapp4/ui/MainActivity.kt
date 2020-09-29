@@ -153,12 +153,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean, VideoListData: List<Video>) {
-        val listOfMovies: List<Movie> = movieListData
+        val listOfMovies: ArrayList<Movie> = ArrayList(movieListData)
         val listOfVideos: List<Video> = VideoListData
         if(firstTime){
             println("The call back is in the MainActivity and it's in firstTime and it's $firstTime")
             firstTime = false
-            adapter = RecyclerAdapter(listOfMovies as ArrayList<Movie>)
+            adapter = RecyclerAdapter(listOfMovies)
             Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
             movie_list_recycler_view.adapter = adapter
         }else if(addInfo){

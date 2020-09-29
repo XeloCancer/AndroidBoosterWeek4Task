@@ -209,7 +209,7 @@ object LocalRepo {
             })
     }
 
-    fun getMovieFromDBase(movieID: Int): Movie{
+    fun getMovieFromDBase(movieID: Int): Movie? {
         return mDatabase.getMovieDao().getMovieFromDao(movieID)
     }
     fun insertMovie(movie: Movie){
