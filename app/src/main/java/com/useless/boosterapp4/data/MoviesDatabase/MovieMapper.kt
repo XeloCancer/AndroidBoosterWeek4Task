@@ -18,6 +18,7 @@ class MovieMapper {
             voteAvg = movieResponse.voteAvg.toDouble(),
             voteCnt = movieResponse.voteCnt,
             overview = movieResponse.overview,
+            popularity = movieResponse.popularity.toDouble(),
             page = page,
             totalPages = totalPages,
         )
