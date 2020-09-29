@@ -16,6 +16,7 @@ class MovieMapper {
             lang = movieResponse.Lang,
             date = movieResponse.date,
             voteAvg = movieResponse.voteAvg.toDouble(),
+            popularity = movieResponse.popularity.toDouble(),
             voteCnt = movieResponse.voteCnt,
             overview = movieResponse.overview,
             page = page,
