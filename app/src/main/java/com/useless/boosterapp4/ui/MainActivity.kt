@@ -13,7 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.data.models.local.Movie
+import com.useless.boosterapp4.data.models.remote.MovieVideos
+import com.useless.boosterapp4.data.models.remote.Video
 import com.useless.boosterapp4.data.recyclerData.RecyclerAdapter
+import com.useless.boosterapp4.data.repository.LocalRepo
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -44,10 +47,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.nav_activity_main)
 
         movieViewModel.movieLiveData.observe(this, {
-            onMovieListReady(it, true)
+            onMovieListReady(it, true, VideoListData = emptyList() )
             println("The data has changed Adel!!")
         })
 
@@ -71,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                 most_popular_button.id -> {
                     addInfo = false
                     movieViewModel.movieLiveData.observe(this, {
-                        onMovieListReady(it, addInfo)
+                        onMovieListReady(it, addInfo, VideoListData = emptyList())
                     })
 
                     movieViewModel.onError.observe(this,{
@@ -103,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                 top_rated_button.id -> {
                     addInfo = false
                     movieViewModel.movieLiveData.observe(this, {
-                        onMovieListReady(it, addInfo)
+                        onMovieListReady(it, addInfo, emptyList())
                     })
 
                     movieViewModel.onError.observe(this,{
@@ -130,19 +133,32 @@ class MainActivity : AppCompatActivity() {
                     colorAnimLightTopRated.start()
                     colorAnimDimTopRated.start()
                 }
+
+                favorites_button.id -> {
+                    addInfo = false
+                    movieViewModel.movieLiveData.observe(this, {
+                        onMovieListReady(it, addInfo, VideoListData = emptyList())
+                    })
+
+                    movieViewModel.onError.observe(this,{
+                        onMovieListError(it)
+                    })
+                    firstTime = true
+
+                    movieViewModel.getFavList()
+                }
             }
         }
 
     }
 
-    private fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean) {
+    private fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean, VideoListData: List<Video>) {
         val listOfMovies: List<Movie> = movieListData
+        val listOfVideos: List<Video> = VideoListData
         if(firstTime){
             println("The call back is in the MainActivity and it's in firstTime and it's $firstTime")
             firstTime = false
-            adapter = RecyclerAdapter(
-                listOfMovies as ArrayList<Movie>
-            )
+            adapter = RecyclerAdapter(listOfMovies as ArrayList<Movie>)
             Toast.makeText(this@MainActivity, "THE MOVIE LIST IS READY", Toast.LENGTH_LONG).show()
             movie_list_recycler_view.adapter = adapter
         }else if(addInfo){

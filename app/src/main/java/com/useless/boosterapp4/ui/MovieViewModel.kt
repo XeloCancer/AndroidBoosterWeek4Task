@@ -56,6 +56,10 @@ class MovieViewModel (application: Application): AndroidViewModel(application),
         }
     }
 
+    fun getFavList(){
+        LocalRepo.loadFavList(this@MovieViewModel)
+    }
+
     private fun nextPage(page: Int) {
         LocalRepo.requestLastFun(this@MovieViewModel, page, true)
     }

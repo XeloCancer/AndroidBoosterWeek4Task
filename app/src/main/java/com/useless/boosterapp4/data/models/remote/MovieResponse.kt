@@ -13,10 +13,13 @@ data class MovieResponse (
     val date: String,
     @SerializedName("vote_average")
     val voteAvg: Number,
+    @SerializedName("popularity")
+    val popularity: Number,
     @SerializedName("vote_count")
     val voteCnt: Int,
     @SerializedName("title")
     val movie_title: String,
     @SerializedName("overview")
     val overview: String
+
 )

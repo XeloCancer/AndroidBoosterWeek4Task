@@ -1,13 +1,13 @@
 package com.useless.boosterapp4.data.repository
 
 import android.content.Context
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.view.View
 import com.useless.boosterapp4.data.MoviesDatabase.MDatabase
 import com.useless.boosterapp4.data.MoviesDatabase.MovieMapper
 import com.useless.boosterapp4.data.models.local.Movie
 import com.useless.boosterapp4.data.models.remote.MovieListResponse
 import com.useless.boosterapp4.data.models.remote.MovieResponse
+import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.network.APIClient
 import com.useless.boosterapp4.data.network.ApiInterface
 import retrofit2.Call
@@ -29,12 +29,13 @@ object LocalRepo {
         APIClient.getClient().create(ApiInterface::class.java)
     }
 
-    private const val apiKey = "6637f7d017283c784ff6746c01f71453"
+
     private var lastUsedFun: Int = -1
     private lateinit var movieListData: MovieListResponse
     private lateinit var prevMovieListData: MovieListResponse
     private lateinit var movieData: MovieResponse
     private lateinit var movieListLocalData: List<Movie>
+    private lateinit var videoData: MovieVideos
 
     fun requestLastFun(
         callback: MovieListCallback,
@@ -45,6 +46,7 @@ object LocalRepo {
         when (lastUsedFun) {
             1 -> requestPopularMovieList(callback, page, addInfo)
             2 -> requestTopRatedMovieList(callback, page, addInfo)
+            3 -> loadFavList(callback, page, addInfo)
         }
     }
 
@@ -92,7 +94,7 @@ object LocalRepo {
         lastUsedFun = 1
 
         //   loadingBar.show()
-        apiServices.doGetMoviesList(apiKey, page = page)
+        apiServices.doGetMoviesList( page = page)
             .enqueue(object : Callback<MovieListResponse> {
 
                 override fun onResponse(
@@ -148,14 +150,13 @@ object LocalRepo {
         }
 
         if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
-
             callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
             return
         }
         lastUsedFun = 2
 
         //   loadingBar.show()
-        apiServices.doGetMovieByRate(apiKey, page = page)
+        apiServices.doGetMovieByRate(page = page)
             .enqueue(object : Callback<MovieListResponse> {
 
                 override fun onResponse(
@@ -164,7 +165,7 @@ object LocalRepo {
                 ) {
                     println("OnResponseCalled")
                     if (response.isSuccessful) {
-                        if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
+                        if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty()) //TODO: Why are we deleting the database in here ?
                             mDatabase.getMovieDao().deleteAllMovies()
                         if (!addInfo) {
                             movieListData = response.body()!!
@@ -200,7 +201,47 @@ object LocalRepo {
                     callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
                 }
             })
+    }
 
+    fun getMovieFromDBase(movieID: Int): Movie{
+        return mDatabase.getMovieDao().getMovieFromDao(movieID)
+    }
+    fun insertMovie(movie: Movie){
+        mDatabase.getMovieDao().addMovies(movie)
+    }
+    fun loadFavList(callback: MovieListCallback, page: Int = 1, addInfo: Boolean = false){
+        lastUsedFun = 3
+        if(addInfo){
+            return
+        }
+        callback.onMovieListReady(mDatabase.getMovieDao().getFav(), addInfo)
+    }
+
+    fun requestMovieVideos(
+        callback: MovieVideosCallback,
+        movieID: Int,
+        itemView: View
+    ){
+        apiServices.doGetMovieVideos(movieID).enqueue(object: Callback<MovieVideos>{
+            override fun onResponse(
+                call: Call<MovieVideos>,
+                response: Response<MovieVideos>
+            ) {
+                if(response.isSuccessful){
+                    videoData = response.body()!!
+                    callback.onMovieVideosReady(videoData, itemView)
+                }else if (response.code() in 400..404) {
+                    val msg = "The videos didn't load properly from the API"
+                    callback.onMovieVideosError(msg)
+                }
+            }
+            override fun onFailure(call: Call<MovieVideos>, t: Throwable) {
+                t.printStackTrace()
+                val msg = "Error while getting video data"
+                callback.onMovieVideosError(msg)
+            }
+
+        })
     }
 
     fun createDatabase(context: Context) {
@@ -217,5 +258,9 @@ object LocalRepo {
         fun onMovieError(errorMsg: String)
     }
 
+    interface MovieVideosCallback{
+        fun onMovieVideosReady(videoData: MovieVideos, itemView: View)
+        fun onMovieVideosError(errorMsg: String)
+    }
 
 }

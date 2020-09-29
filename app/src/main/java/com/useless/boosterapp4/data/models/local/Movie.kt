@@ -10,18 +10,23 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "movies_table", indices = [Index(value = ["title", "posterPath"], unique = true)])
 //@Entity(tableName = "movies_table")
 data class Movie(
-        @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
         val dbID : Int? = null,
-        val id: Int = 123,
-        @ColumnInfo(name = "title")
+    val id: Int = 123,
+    @ColumnInfo(name = "title")
         val title: String ="",
-        @ColumnInfo(name = "posterPath")
+    @ColumnInfo(name = "posterPath")
         val posterPath: String ="",
-        val lang: String ="",
-        val date: String ="",
-        val voteAvg: Double,
-        val voteCnt: Int,
-        val overview : String ="",
-        val page : Int,
-        val totalPages : Int,
+    val lang: String ="",
+    val vidLink: String="",
+    val date: String ="",
+    val voteAvg: Double,
+    val popularity: Double,
+    val voteCnt: Int,
+    val overview : String ="",
+    val page : Int,
+    val totalPages : Int,
+    var fav : Boolean = false,
+    var isPop: Boolean = false,
+    var isRat: Boolean = false
 )
