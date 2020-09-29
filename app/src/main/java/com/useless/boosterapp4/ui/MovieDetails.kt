@@ -107,12 +107,17 @@ class MovieDetails : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        makeCurrentFragment(descriptionFragment)
-        descriptionFragment.iPassData(intent.getStringExtra("overview"))
+        bottom_nav.selectedItemId = R.id.descriptionItem
     }
 
     private  fun makeCurrentFragment(fragment : Fragment) =
         supportFragmentManager.beginTransaction().apply {
+            setCustomAnimations(
+                R.anim.fragment_fade_enter,
+                R.anim.fragment_fade_exit,
+                R.anim.fragment_fade_enter,
+                R.anim.fragment_fade_exit
+            )
             replace(R.id.fragment_container,fragment)
             commit()
    }
