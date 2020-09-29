@@ -8,10 +8,13 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.R
+import com.useless.boosterapp4.data.models.local.Movie
 import com.useless.boosterapp4.data.repository.LocalRepo
 import com.useless.boosterapp4.fragments.DescriptionFragment
 import com.useless.boosterapp4.fragments.ReviewFragment
 import com.useless.boosterapp4.fragments.TrailerFragment
+import com.useless.boosterapp4.utils.MovieType
+import com.useless.boosterapp4.utils.flagAs
 import kotlinx.android.synthetic.main.movie_details.*
 import java.util.*
 
@@ -44,11 +47,13 @@ class MovieDetails : AppCompatActivity() {
         fav_button.setOnClickListener {
             if(favMovie){
                 fav_button.setImageResource(R.drawable.ic_star_empty)
-                LocalRepo.removeFromFavList(intent.getIntExtra("id", -465))
+                var movie: Movie = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
+                movie.flagAs(MovieType.UNFAV)
             }
             if(!favMovie){
                 fav_button.setImageResource(R.drawable.ic_star_full)
-                LocalRepo.addToFavList(intent.getIntExtra("id", -465))
+                var movie: Movie = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
+                movie.flagAs(MovieType.FAV)
             }
         }
 

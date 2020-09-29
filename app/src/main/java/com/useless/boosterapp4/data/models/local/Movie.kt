@@ -21,9 +21,12 @@ data class Movie(
     val vidLink: String="",
     val date: String ="",
     val voteAvg: Double,
+    val popularity: Double,
     val voteCnt: Int,
     val overview : String ="",
     val page : Int,
     val totalPages : Int,
-    var fav : Boolean = false
+    var fav : Boolean = false,
+    var isPop: Boolean = false,
+    var isRat: Boolean = false
 )

@@ -2,9 +2,6 @@ package com.useless.boosterapp4.data.repository
 
 import android.content.Context
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.appcompat.view.menu.ActionMenuItemView
 import com.useless.boosterapp4.data.MoviesDatabase.MDatabase
 import com.useless.boosterapp4.data.MoviesDatabase.MovieMapper
 import com.useless.boosterapp4.data.models.local.Movie
@@ -13,7 +10,6 @@ import com.useless.boosterapp4.data.models.remote.MovieResponse
 import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.network.APIClient
 import com.useless.boosterapp4.data.network.ApiInterface
-import com.useless.boosterapp4.data.recyclerData.MovieViewHolder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -154,7 +150,6 @@ object LocalRepo {
         }
 
         if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
-
             callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
             return
         }
@@ -208,14 +203,10 @@ object LocalRepo {
             })
     }
 
-    fun addToFavList(movieID: Int){
-        var movie: Movie = mDatabase.getMovieDao().getMovieFromDao(movieID)
-        movie.fav = true
-        mDatabase.getMovieDao().addMovies(movie)
+    fun getMovieFromDBase(movieID: Int): Movie{
+        return mDatabase.getMovieDao().getMovieFromDao(movieID)
     }
-    fun removeFromFavList(movieID: Int){
-        var movie: Movie = mDatabase.getMovieDao().getMovieFromDao(movieID)
-        movie.fav = false
+    fun insertMovie(movie: Movie){
         mDatabase.getMovieDao().addMovies(movie)
     }
     fun loadFavList(callback: MovieListCallback, page: Int = 1, addInfo: Boolean = false){
