@@ -18,16 +18,60 @@
         app:layout_constraintStart_toStartOf="parent"
         android:contentDescription="@string/back_button" />
 
+    <TextView
+        android:id="@+id/rating_details"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/movie_rating_circular_background"
+        android:padding="8dp"
+        android:textColor="#F0F0F0"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:text="83%"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="@id/movie_poster_detail"
+        app:layout_constraintBottom_toTopOf="@id/fav_button"
+        app:layout_constraintStart_toEndOf="@id/movie_name"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/rating_progress_bar_details"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        style="?android:progressBarStyleHorizontal"
+        tools:progress="83"
+        android:progressDrawable="@drawable/rounded_progress_bar_rating"
+        app:layout_constraintTop_toTopOf="@id/rating_details"
+        app:layout_constraintBottom_toBottomOf="@id/rating_details"
+        app:layout_constraintStart_toStartOf="@id/rating_details"
+        app:layout_constraintEnd_toEndOf="@id/rating_details"/>
+
+    <TextView
+        android:id="@+id/vote_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#F0F0F0"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:text="100,000"
+        app:drawableLeftCompat="@drawable/ic_baseline_person_outline_24"
+        android:drawablePadding="0dp"
+        app:layout_constraintStart_toStartOf="@id/rating_details"
+        app:layout_constraintEnd_toEndOf="@id/rating_details"
+        app:layout_constraintTop_toBottomOf="@id/rating_details" />
+
     <ImageButton
         android:id="@+id/fav_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_star_empty"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_baseline_favorite_border_24"
         android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="@id/logo_details"
-        app:layout_constraintEnd_toStartOf="@id/logo_details"
-        app:layout_constraintTop_toTopOf="@id/logo_details"
+        app:layout_constraintTop_toBottomOf="@id/vote_count"
+        app:layout_constraintBottom_toBottomOf="@id/movie_poster_detail"
+        app:layout_constraintStart_toStartOf="@id/rating_details"
+        app:layout_constraintEnd_toEndOf="@id/rating_details"
         android:contentDescription="@string/movie_poster" />
 
     <ImageView
@@ -60,7 +104,7 @@
         style="@style/MovieDataTextViewStyle"
         tools:text="Title: Inception"
         app:layout_constraintStart_toEndOf="@id/movie_poster_detail"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rating_details"
         app:layout_constraintTop_toTopOf="@id/movie_poster_detail"
         app:layout_constraintBottom_toTopOf="@id/release_date"/>
 
@@ -69,7 +113,7 @@
         style="@style/MovieDataTextViewStyle"
         tools:text="Release Date: 14 July 2010"
         app:layout_constraintStart_toEndOf="@id/movie_poster_detail"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rating_details"
         app:layout_constraintTop_toBottomOf="@id/movie_name"
         app:layout_constraintBottom_toTopOf="@id/languages"/>
 
@@ -78,7 +122,7 @@
         style="@style/MovieDataTextViewStyle"
         tools:text="Languages: English"
         app:layout_constraintStart_toEndOf="@id/movie_poster_detail"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/rating_details"
         app:layout_constraintTop_toBottomOf="@id/release_date"
         app:layout_constraintBottom_toBottomOf="@id/movie_poster_detail"/>
 

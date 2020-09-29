@@ -1,5 +1,6 @@
 package com.useless.boosterapp4.ui
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -35,23 +36,24 @@ class MovieDetails : AppCompatActivity() {
         TrailerFragment()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.movie_details)
         var favMovie: Boolean = intent.getBooleanExtra("fav", false)
 
         if(favMovie){
-            fav_button.setImageResource(R.drawable.ic_star_full)
+            fav_button.setImageResource(R.drawable.ic_baseline_favorite_24)
         }
 
         fav_button.setOnClickListener {
             if(favMovie){
-                fav_button.setImageResource(R.drawable.ic_star_empty)
+                fav_button.setImageResource(R.drawable.ic_baseline_favorite_border_24)
                 var movie: Movie = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
                 movie.flagAs(MovieType.UNFAV)
             }
             if(!favMovie){
-                fav_button.setImageResource(R.drawable.ic_star_full)
+                fav_button.setImageResource(R.drawable.ic_baseline_favorite_24)
                 var movie: Movie = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
                 movie.flagAs(MovieType.FAV)
             }
@@ -87,18 +89,23 @@ class MovieDetails : AppCompatActivity() {
         }
         width = displayMetrics.widthPixels
         height = displayMetrics.heightPixels
-        window.setLayout((width!! * 0.8).toInt(), (height!! * 0.8).toInt())
+        window.setLayout((width!! * 0.9).toInt(), (height!! * 0.8).toInt())
 
         val posterPath : String? = intent.getStringExtra("poster_path")
         val title : String? = intent.getStringExtra("title")
         val releaseDate : String? = intent.getStringExtra("release_date")
         val language : String? = intent.getStringExtra("language")!!.toUpperCase(Locale.ROOT)
+        val rating : Int = intent.getIntExtra("rating_progress", 0)
+        val voteCnt : String? = intent.getStringExtra("vote_count")
        // val overview : String? = intent.getStringExtra("overview")
 
         Picasso.get().load("https://image.tmdb.org/t/p/w300/${posterPath}").into(movie_poster_detail)
         movie_name.text = HtmlCompat.fromHtml("<b>Title:</b> <br> $title", HtmlCompat.FROM_HTML_MODE_LEGACY)
         release_date.text = HtmlCompat.fromHtml("<b>Release Date:</b> <br> $releaseDate", HtmlCompat.FROM_HTML_MODE_LEGACY)
         languages.text = HtmlCompat.fromHtml("<b>Languages:</b> <br> $language", HtmlCompat.FROM_HTML_MODE_LEGACY)
+        rating_details.text = "$rating%"
+        vote_count.text = voteCnt
+        rating_progress_bar_details.progress = rating
      //   movie_overview.text = HtmlCompat.fromHtml(overview!!, HtmlCompat.FROM_HTML_MODE_LEGACY)
         this.setFinishOnTouchOutside(true)
 

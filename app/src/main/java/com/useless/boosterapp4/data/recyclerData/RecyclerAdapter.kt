@@ -1,5 +1,6 @@
 package com.useless.boosterapp4.data.recyclerData
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.useless.boosterapp4.ui.MovieViewModel
 class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
 ): RecyclerView.Adapter<MovieViewHolder>(), MovieViewModel.PageControl, LocalRepo.MovieVideosCallback{
     val bundle = Bundle()
+    private var movieRatingProgress : Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent. context)
@@ -28,17 +30,17 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = listOfMovies[position]
 
-        val movieRatingPercent = "${(movie.voteAvg * 10).toInt()}%"
+        movieRatingProgress = (movie.voteAvg * 10).toInt()
         Picasso.get().load("https://image.tmdb.org/t/p/w300/${movie.posterPath}").into(holder.moviePicture)
         holder.movieTitle.text = movie.title
-        holder.rating.text = movieRatingPercent
-        holder.ratingBar.progress = (movie.voteAvg * 10).toInt()
+        @SuppressLint("SetTextI18n")
+        holder.rating.text = "$movieRatingProgress%"
+        holder.ratingBar.progress = movieRatingProgress
         println("Position is $position, and Item count is $itemCount")
 
         //OnClickListener responsible for sending data to the other activity
         holder.itemView.setOnClickListener {
             //Creates a bundle of data to pass to the activity
-
             bundle.clear()
             bundle.putBoolean("fav", movie.fav)
             bundle.putInt("id", movie.id)
@@ -47,6 +49,9 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
             bundle.putString("release_date", movie.date)
             bundle.putString("language", movie.lang)
             bundle.putString("overview", movie.overview)
+            bundle.putInt("rating_percent", (movie.voteAvg * 10).toInt())
+            bundle.putInt("rating_progress", (movie.voteAvg * 10).toInt())
+            bundle.putString("vote_count", movie.voteCnt.toString())
             LocalRepo.requestMovieVideos(this@RecyclerAdapter, movie.id, holder.itemView)
         }
     }
