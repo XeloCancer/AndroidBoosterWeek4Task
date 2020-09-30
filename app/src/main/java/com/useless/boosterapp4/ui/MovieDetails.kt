@@ -40,7 +40,8 @@ class MovieDetails : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.movie_details)
-        var favMovie: Boolean = intent.getBooleanExtra("fav", false)
+        var movieID: Int = intent.getIntExtra("id", 0)
+        var favMovie: Boolean = LocalRepo.getMovieFromDBase(movieID)!!.fav
 
         if(favMovie){
             fav_button.setImageResource(R.drawable.ic_baseline_favorite_24)
@@ -50,11 +51,12 @@ class MovieDetails : AppCompatActivity() {
             if(favMovie){
                 fav_button.setImageResource(R.drawable.ic_baseline_favorite_border_24)
                 var movie: Movie? = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
+                favMovie = false
                 movie!!.flagAs(MovieType.UNFAV)
-            }
-            if(!favMovie){
+            }else if(!favMovie){
                 fav_button.setImageResource(R.drawable.ic_baseline_favorite_24)
                 var movie: Movie? = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
+                favMovie = true
                 movie!!.flagAs(MovieType.FAV)
             }
         }
