@@ -51,6 +51,7 @@ class TrailerFragment : Fragment() , MovieDetails.PassData, YouTubePlayer.OnInit
     ) {
         if(!p2 && videoLink != null){
             p1!!.cueVideo(videoLink)
+            p1.setShowFullscreenButton(false)
         }
         player = p1!!
     }
