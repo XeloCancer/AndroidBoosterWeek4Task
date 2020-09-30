@@ -18,20 +18,34 @@ fun Movie.flagAs(type: MovieType){
 
     when (type){
         MovieType.POP -> {
-            this.isPop = true
-            LocalRepo.insertMovie(this)
+            if(LocalRepo.getMovieFromDBase(this.id) != null){
+                var movie: Movie? = LocalRepo.getMovieFromDBase(this.id)
+                movie!!.isPop = true
+                LocalRepo.insertMovie(movie)
+            }else{
+                this.isPop = true
+                LocalRepo.insertMovie(this)
+            }
         }
         MovieType.RAT -> {
+            if(LocalRepo.getMovieFromDBase(this.id) != null){
+            var movie: Movie? = LocalRepo.getMovieFromDBase(this.id)
+            movie!!.isRat = true
+            LocalRepo.insertMovie(movie)
+        }else{
             this.isRat = true
             LocalRepo.insertMovie(this)
         }
+        }
         MovieType.FAV -> {
-            this.fav = true
-            LocalRepo.insertMovie(this)
+            var movie: Movie? = LocalRepo.getMovieFromDBase(this.id)
+            movie!!.fav = true
+            LocalRepo.insertMovie(movie)
         }
         MovieType.UNFAV ->{
-            this.fav = false
-            LocalRepo.insertMovie(this)
+            var movie: Movie? = LocalRepo.getMovieFromDBase(this.id)
+            movie!!.fav = false
+            LocalRepo.insertMovie(movie)
         }
     }
 }

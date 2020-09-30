@@ -49,13 +49,13 @@ class MovieDetails : AppCompatActivity() {
         fav_button.setOnClickListener {
             if(favMovie){
                 fav_button.setImageResource(R.drawable.ic_baseline_favorite_border_24)
-                var movie: Movie = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
-                movie.flagAs(MovieType.UNFAV)
+                var movie: Movie? = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
+                movie!!.flagAs(MovieType.UNFAV)
             }
             if(!favMovie){
                 fav_button.setImageResource(R.drawable.ic_baseline_favorite_24)
-                var movie: Movie = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
-                movie.flagAs(MovieType.FAV)
+                var movie: Movie? = LocalRepo.getMovieFromDBase(intent.getIntExtra("id", -465))
+                movie!!.flagAs(MovieType.FAV)
             }
         }
 

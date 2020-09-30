@@ -10,6 +10,8 @@ import com.useless.boosterapp4.data.models.remote.MovieResponse
 import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.network.APIClient
 import com.useless.boosterapp4.data.network.ApiInterface
+import com.useless.boosterapp4.utils.MovieType
+import com.useless.boosterapp4.utils.flagAs
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -87,8 +89,7 @@ object LocalRepo {
         }
 
         if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
-
-            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
+            callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedBy { it.popularity }, false)
             return
         }
         lastUsedFun = 1
@@ -102,16 +103,18 @@ object LocalRepo {
                     response: Response<MovieListResponse>
                 ) {
                     println("OnResponseCalled")
-                    if (response.isSuccessful) {
+                    if (response.isSuccessful) {/*
                         if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty())
                             mDatabase.getMovieDao().deleteAllMovies()
+                            */
                         if (!addInfo) {
                             movieListData = response.body()!!
                             movieListLocalData = mapper.mapToMovieListUi(movieListData)
                             movieListLocalData.forEach {
-                                mDatabase.getMovieDao().addMovies(it)
+                                it.flagAs(MovieType.POP)
+                                //mDatabase.getMovieDao().addMovies(it) TODO: THIS MIGHT NOT BE NECESSARY AS FLAGAS ALREADY INSERTS MOVIES
                             }
-                            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
+                            callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedBy { it.popularity }, false)
                         } else if (addInfo) {
 //                            prevMovieListData = movieListData
                             movieListData = response.body()!!
@@ -119,7 +122,8 @@ object LocalRepo {
                             movieListLocalData = mapper.mapToMovieListUi(movieListData)
 //                            movieListData.list = prevMovieListData.list
                             movieListLocalData.forEach {
-                                mDatabase.getMovieDao().addMovies(it)
+                                it.flagAs(MovieType.POP)
+                                //mDatabase.getMovieDao().addMovies(it) TODO: THIS MIGHT NOT BE NECESSARY AS FLAGAS ALREADY INSERTS MOVIES
                             }
                             println("I am calling back the popular movie list, with addInfo as $addInfo")
                             callback.onMovieListReady(movieListLocalData, true)
@@ -136,12 +140,11 @@ object LocalRepo {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
-                    callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
+                    callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedBy { it.popularity }, false)
                 }
             })
 
     }
-
 
     fun requestTopRatedMovieList(callback: MovieListCallback, page: Int, addInfo: Boolean = false, changing : Boolean = false) {
         if (this::movieListData.isInitialized && page > movieListData.totalPages) {
@@ -150,7 +153,7 @@ object LocalRepo {
         }
 
         if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
-            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
+            callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedBy { it.voteAvg }, false)
             return
         }
         lastUsedFun = 2
@@ -164,16 +167,18 @@ object LocalRepo {
                     response: Response<MovieListResponse>
                 ) {
                     println("OnResponseCalled")
-                    if (response.isSuccessful) {
-                        if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty()) //TODO: Why are we deleting the database in here ?
+                    if (response.isSuccessful) {/*
+                            if (!mDatabase.getMovieDao().getAllMovies().isNullOrEmpty()) //TODO: Why are we deleting the database in here ?
                             mDatabase.getMovieDao().deleteAllMovies()
+                            */
                         if (!addInfo) {
                             movieListData = response.body()!!
                             movieListLocalData = mapper.mapToMovieListUi(movieListData)
                             movieListLocalData.forEach {
-                                mDatabase.getMovieDao().addMovies(it)
+                                it.flagAs(MovieType.RAT)
+                                //mDatabase.getMovieDao().addMovies(it) TODO: THIS MIGHT NOT BE NECESSARY AS FLAGAS ALREADY INSERTS MOVIES
                             }
-                            callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
+                            callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedBy { it.voteAvg }, false)
                         } else if (addInfo) {
 //                            prevMovieListData = movieListData
                             movieListData = response.body()!!
@@ -181,7 +186,8 @@ object LocalRepo {
                             movieListLocalData = mapper.mapToMovieListUi(movieListData)
 //                            movieListData.list = prevMovieListData.list
                             movieListLocalData.forEach {
-                                mDatabase.getMovieDao().addMovies(it)
+                                it.flagAs(MovieType.RAT)
+                                //mDatabase.getMovieDao().addMovies(it) TODO: THIS MIGHT NOT BE NECESSARY AS FLAGAS ALREADY INSERTS MOVIES
                             }
                             println("I am calling back the popular movie list, with addInfo as $addInfo")
                             callback.onMovieListReady(movieListLocalData, true)
@@ -198,12 +204,12 @@ object LocalRepo {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
-                    callback.onMovieListReady(mDatabase.getMovieDao().getAllMovies(), false)
+                    callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedBy { it.voteAvg }, false)
                 }
             })
     }
 
-    fun getMovieFromDBase(movieID: Int): Movie{
+    fun getMovieFromDBase(movieID: Int): Movie? {
         return mDatabase.getMovieDao().getMovieFromDao(movieID)
     }
     fun insertMovie(movie: Movie){
@@ -214,7 +220,7 @@ object LocalRepo {
         if(addInfo){
             return
         }
-        callback.onMovieListReady(mDatabase.getMovieDao().getFav(), addInfo)
+        callback.onMovieListReady(mDatabase.getMovieDao().getFav().sortedBy { it.popularity }, addInfo)
     }
 
     fun requestMovieVideos(
