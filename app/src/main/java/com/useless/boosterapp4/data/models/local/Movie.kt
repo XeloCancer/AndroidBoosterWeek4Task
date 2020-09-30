@@ -10,8 +10,9 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "movies_table", indices = [Index(value = ["title", "posterPath"], unique = true)])
 //@Entity(tableName = "movies_table")
 data class Movie(
-    @PrimaryKey(autoGenerate = true)
-        val dbID : Int? = null,
+//    @PrimaryKey(autoGenerate = true)
+//        val dbID : Int? = null,
+    @PrimaryKey
     val id: Int = 123,
     @ColumnInfo(name = "title")
         val title: String ="",

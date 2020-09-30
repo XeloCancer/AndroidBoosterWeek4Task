@@ -89,7 +89,7 @@ object LocalRepo {
         }
 
         if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
-            callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedBy { it.popularity }, false)
+            callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedByDescending { it.popularity }, false)
             return
         }
         lastUsedFun = 1
@@ -114,7 +114,7 @@ object LocalRepo {
                                 it.flagAs(MovieType.POP)
                                 //mDatabase.getMovieDao().addMovies(it) TODO: THIS MIGHT NOT BE NECESSARY AS FLAGAS ALREADY INSERTS MOVIES
                             }
-                            callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedBy { it.popularity }, false)
+                            callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedByDescending { it.popularity }, false)
                         } else if (addInfo) {
 //                            prevMovieListData = movieListData
                             movieListData = response.body()!!
@@ -140,7 +140,7 @@ object LocalRepo {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
-                    callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedBy { it.popularity }, false)
+                    callback.onMovieListReady(mDatabase.getMovieDao().getPopMovies().sortedByDescending { it.popularity }, false)
                 }
             })
 
@@ -153,7 +153,7 @@ object LocalRepo {
         }
 
         if (this::movieListData.isInitialized && lastUsedFun == 1 && !addInfo && !changing) {
-            callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedBy { it.voteAvg }, false)
+            callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedByDescending { it.voteAvg }, false)
             return
         }
         lastUsedFun = 2
@@ -178,7 +178,7 @@ object LocalRepo {
                                 it.flagAs(MovieType.RAT)
                                 //mDatabase.getMovieDao().addMovies(it) TODO: THIS MIGHT NOT BE NECESSARY AS FLAGAS ALREADY INSERTS MOVIES
                             }
-                            callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedBy { it.voteAvg }, false)
+                            callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedByDescending { it.voteAvg }, false)
                         } else if (addInfo) {
 //                            prevMovieListData = movieListData
                             movieListData = response.body()!!
@@ -204,7 +204,7 @@ object LocalRepo {
                     t.printStackTrace()
                     val msg = "Error while getting movie data ${t.message}"
                     callback.onMovieListError(msg)
-                    callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedBy { it.voteAvg }, false)
+                    callback.onMovieListReady(mDatabase.getMovieDao().getRatMovies().sortedByDescending { it.voteAvg }, false)
                 }
             })
     }
@@ -220,7 +220,15 @@ object LocalRepo {
         if(addInfo){
             return
         }
-        callback.onMovieListReady(mDatabase.getMovieDao().getFav().sortedBy { it.popularity }, addInfo)
+        callback.onMovieListReady(mDatabase.getMovieDao().getFav().sortedByDescending { it.popularity }, addInfo)
+    }
+
+    fun calcPopPage() : Int {
+        return mDatabase.getMovieDao().getPopMovies().size / 20
+    }
+
+    fun calcRatPage() : Int {
+        return mDatabase.getMovieDao().getRatMovies().size / 20
     }
 
     fun requestMovieVideos(

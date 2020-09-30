@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         //Responsible for handling changes to button clicks
         button_group.addOnButtonCheckedListener { group, checkedId, isChecked ->
             page = 1
+            if (isChecked){
             when(group.checkedButtonId){
                 most_popular_button.id -> {
                     addInfo = false
@@ -149,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
+}
     }
 
     private fun onMovieListReady(movieListData: List<Movie>, addInfo: Boolean, VideoListData: List<Video>) {
@@ -174,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if(!movie_list_recycler_view.canScrollVertically(1) && !MovieViewModel.isLoading){
                     println("I am Adel and I am sending nextPage(page = $page)")
+                    movie_list_recycler_view.removeOnScrollListener(this)
                     nextPage(++page)
                 }
             }
