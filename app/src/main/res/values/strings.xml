@@ -36,4 +36,5 @@
     <string name="Historical">Historical</string>
     <string name="Horror">Horror</string>
     <string name="favorites">Favorites</string>
+    <string name="failed_to_retrieve_video">Failed to retrieve video</string>
 </resources>

@@ -11,4 +11,13 @@
         android:layout_marginEnd="12dp"
         android:configChanges="orientation|keyboardHidden"/>
 
+    <TextView
+        android:id="@+id/missing_video_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/failed_to_retrieve_video"
+        android:visibility="gone"/>
+
     </RelativeLayout>

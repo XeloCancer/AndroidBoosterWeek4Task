@@ -20,6 +20,7 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
 ): RecyclerView.Adapter<MovieViewHolder>(), MovieViewModel.PageControl, LocalRepo.MovieVideosCallback{
     val bundle = Bundle()
     private var movieRatingProgress : Int = 0
+    private lateinit var intent: Intent
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent. context)
@@ -52,7 +53,10 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
             bundle.putInt("rating_percent", (movie.voteAvg * 10).toInt())
             bundle.putInt("rating_progress", (movie.voteAvg * 10).toInt())
             bundle.putString("vote_count", movie.voteCnt.toString())
+            intent = Intent(holder.itemView.context, MovieDetails::class.java)
             LocalRepo.requestMovieVideos(this@RecyclerAdapter, movie.id, holder.itemView)
+            intent.putExtras(bundle)
+            holder.itemView.context.startActivity(intent)
         }
     }
 
@@ -70,14 +74,14 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
     }
 
     override fun onMovieVideosReady(videoData: MovieVideos, itemView: View) {
-        val intent = Intent(itemView.context, MovieDetails::class.java)
         bundle.putString("videoLink", videoData.data.first().key)
         intent.putExtras(bundle)
         itemView.context.startActivity(intent)
     }
 
-    override fun onMovieVideosError(errorMsg: String) {
-        TODO("Not yet implemented")
+    override fun onMovieVideosError(errorMsg: String, itemView: View) {
+        intent.putExtras(bundle)
+        itemView.context.startActivity(intent)
     }
 
 }

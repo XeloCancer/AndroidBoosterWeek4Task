@@ -13,6 +13,7 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.data.keys.APIKeys
 import com.useless.boosterapp4.ui.MovieDetails
+import kotlinx.android.synthetic.main.fragment_trailer.*
 
 
 class TrailerFragment : Fragment() , MovieDetails.PassData, YouTubePlayer.OnInitializedListener{
@@ -42,7 +43,6 @@ class TrailerFragment : Fragment() , MovieDetails.PassData, YouTubePlayer.OnInit
         if (data != null) {
             videoLink = data
         }
-        else Toast.makeText(context, "No", Toast.LENGTH_SHORT).show()
     }
 
     override fun onInitializationSuccess(
@@ -61,7 +61,8 @@ class TrailerFragment : Fragment() , MovieDetails.PassData, YouTubePlayer.OnInit
         p0: YouTubePlayer.Provider?,
         p1: YouTubeInitializationResult?
     ) {
-        Toast.makeText(context, "No", Toast.LENGTH_SHORT).show()
+        youtube_player.visibility = View.GONE
+        missing_video_text.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {

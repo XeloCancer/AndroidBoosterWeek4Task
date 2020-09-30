@@ -246,13 +246,13 @@ object LocalRepo {
                     callback.onMovieVideosReady(videoData, itemView)
                 }else if (response.code() in 400..404) {
                     val msg = "The videos didn't load properly from the API"
-                    callback.onMovieVideosError(msg)
+                    callback.onMovieVideosError(msg, itemView)
                 }
             }
             override fun onFailure(call: Call<MovieVideos>, t: Throwable) {
                 t.printStackTrace()
                 val msg = "Error while getting video data"
-                callback.onMovieVideosError(msg)
+                callback.onMovieVideosError(msg, itemView)
             }
 
         })
@@ -274,7 +274,7 @@ object LocalRepo {
 
     interface MovieVideosCallback{
         fun onMovieVideosReady(videoData: MovieVideos, itemView: View)
-        fun onMovieVideosError(errorMsg: String)
+        fun onMovieVideosError(errorMsg: String, itemView: View)
     }
 
 }

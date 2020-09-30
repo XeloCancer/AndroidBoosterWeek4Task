@@ -7,3 +7,4 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/src/main/java/com/useless/boosterapp4/data/keys/APIKeys.kt
