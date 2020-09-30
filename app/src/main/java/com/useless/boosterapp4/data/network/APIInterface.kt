@@ -31,8 +31,8 @@ interface ApiInterface {
                          @Query("api_key") apiKey: String = APIKeys.tmdbAPIKey
     ): Call<MovieVideos>
 
-    @GET("review/{review_id}") //TODO: HOW DO WE GET THE REVIEW ID ?
-    fun doGetReview(@Path("review_id") revID: Int,
-                    @Query("api_key") apiKey: String = APIKeys.tmdbAPIKey
+    @GET("movie/{id}/reviews")
+    fun doGetMovieReviews(@Path("id") movieID: Int,
+                          @Query("api_key") apiKey: String = APIKeys.tmdbAPIKey
     ): Call<MovieReview>
 }
