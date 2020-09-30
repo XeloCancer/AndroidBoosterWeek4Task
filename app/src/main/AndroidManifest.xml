@@ -15,7 +15,7 @@
         <activity
             android:name=".ui.SideNavActivity"
             android:label="@string/title_activity_side_nav"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Side_nav"
             android:label="@string/title_activity_side_nav"

@@ -71,7 +71,7 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
 
     override fun onMovieVideosReady(videoData: MovieVideos, itemView: View) {
         val intent = Intent(itemView.context, MovieDetails::class.java)
-        bundle.putString("videoLink", "https://www.${videoData.data.first().site}.com/watch?v=${videoData.data.first().key}")
+        bundle.putString("videoLink", videoData.data.first().key)
         intent.putExtras(bundle)
         itemView.context.startActivity(intent)
     }
