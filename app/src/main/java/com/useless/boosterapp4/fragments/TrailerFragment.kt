@@ -11,12 +11,13 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import com.useless.boosterapp4.R
+import com.useless.boosterapp4.data.keys.APIKeys
 import com.useless.boosterapp4.ui.MovieDetails
 
 
 class TrailerFragment : Fragment() , MovieDetails.PassData, YouTubePlayer.OnInitializedListener{
     private lateinit var trailer : FrameLayout
-    private val apiKey = "AIzaSyDsVxqRYXU2KrpxHvMUQ1uZjVPT2vPp6ac"
+    private val apiKey = APIKeys.googleAPIKey
     private var videoLink : String? = null
     private val youtubePlayerFragment by lazy {
         YouTubePlayerSupportFragment()
