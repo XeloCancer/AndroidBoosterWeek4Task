@@ -3,6 +3,7 @@ package com.useless.boosterapp4.data.network
 import com.useless.boosterapp4.data.keys.APIKeys
 import com.useless.boosterapp4.data.models.remote.MovieListResponse
 import com.useless.boosterapp4.data.models.remote.MovieResponse
+import com.useless.boosterapp4.data.models.remote.MovieReview
 import com.useless.boosterapp4.data.models.remote.MovieVideos
 import retrofit2.Call
 import retrofit2.http.*
@@ -29,4 +30,9 @@ interface ApiInterface {
     fun doGetMovieVideos(@Path("id") movieID: Int,
                          @Query("api_key") apiKey: String = APIKeys.tmdbAPIKey
     ): Call<MovieVideos>
+
+    @GET("review/{review_id}") //TODO: HOW DO WE GET THE REVIEW ID ?
+    fun doGetReview(@Path("review_id") revID: Int,
+                    @Query("api_key") apiKey: String = APIKeys.tmdbAPIKey
+    ): Call<MovieReview>
 }
