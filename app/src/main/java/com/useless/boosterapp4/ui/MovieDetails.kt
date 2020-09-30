@@ -10,16 +10,20 @@ import androidx.fragment.app.Fragment
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.R
 import com.useless.boosterapp4.data.models.local.Movie
+import com.useless.boosterapp4.data.models.remote.MovieReview
+import com.useless.boosterapp4.data.models.remote.ReviewData
 import com.useless.boosterapp4.data.repository.LocalRepo
 import com.useless.boosterapp4.fragments.DescriptionFragment
 import com.useless.boosterapp4.fragments.ReviewFragment
 import com.useless.boosterapp4.fragments.TrailerFragment
 import com.useless.boosterapp4.utils.MovieType
 import com.useless.boosterapp4.utils.flagAs
+import kotlinx.android.synthetic.main.fragment_review.*
 import kotlinx.android.synthetic.main.movie_details.*
 import java.util.*
+import kotlin.collections.ArrayList
 
-class MovieDetails : AppCompatActivity() {
+class MovieDetails : AppCompatActivity(), LocalRepo.MovieReviewsCallback {
 
     private var width : Int? = null
     private var height : Int? = null
@@ -68,8 +72,8 @@ class MovieDetails : AppCompatActivity() {
                     descriptionFragment.iPassData(intent.getStringExtra("overview"))
                 }
                 R.id.reviewItem -> {
+                    LocalRepo.requestMovieReviews(this, intent.getIntExtra("id", -465))
                     makeCurrentFragment(reviewFragment)
-                    reviewFragment.iPassData(intent.getStringExtra("review item should be here, waiting for Adel to add them in API"))
                 }
                 R.id.trailerItem -> {
                     makeCurrentFragment(trailerFragment)
@@ -133,4 +137,17 @@ class MovieDetails : AppCompatActivity() {
    interface PassData {
        fun iPassData (data: String?)
    }
+
+    interface PassReview {
+        fun iPassReview (data: ArrayList<ReviewData>?)
+    }
+
+    override fun onMovieReviewsReady(reviewData: MovieReview) {
+        reviewFragment.iPassReview(reviewData.data!!)
+    }
+
+    override fun onMovieReviewsError(errorMsg: String) {
+        review_details.text = HtmlCompat.fromHtml("No reviews are available for this movie. You can visit themoviedb.org to add your review.", HtmlCompat.FROM_HTML_MODE_LEGACY)
+    }
+
 }

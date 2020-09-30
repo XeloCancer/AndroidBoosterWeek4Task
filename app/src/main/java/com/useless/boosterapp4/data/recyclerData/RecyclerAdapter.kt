@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.useless.boosterapp4.ui.MovieDetails
 import com.useless.boosterapp4.R
+import com.useless.boosterapp4.data.models.remote.MovieReview
 import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.models.remote.Video
 import com.useless.boosterapp4.data.repository.LocalRepo
@@ -55,8 +56,6 @@ class RecyclerAdapter (private val listOfMovies: ArrayList<Movie>
             bundle.putString("vote_count", movie.voteCnt.toString())
             intent = Intent(holder.itemView.context, MovieDetails::class.java)
             LocalRepo.requestMovieVideos(this@RecyclerAdapter, movie.id, holder.itemView)
-            intent.putExtras(bundle)
-            holder.itemView.context.startActivity(intent)
         }
     }
 
