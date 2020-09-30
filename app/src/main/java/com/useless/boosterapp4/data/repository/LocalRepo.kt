@@ -7,6 +7,7 @@ import com.useless.boosterapp4.data.MoviesDatabase.MovieMapper
 import com.useless.boosterapp4.data.models.local.Movie
 import com.useless.boosterapp4.data.models.remote.MovieListResponse
 import com.useless.boosterapp4.data.models.remote.MovieResponse
+import com.useless.boosterapp4.data.models.remote.MovieReview
 import com.useless.boosterapp4.data.models.remote.MovieVideos
 import com.useless.boosterapp4.data.network.APIClient
 import com.useless.boosterapp4.data.network.ApiInterface
@@ -38,6 +39,7 @@ object LocalRepo {
     private lateinit var movieData: MovieResponse
     private lateinit var movieListLocalData: List<Movie>
     private lateinit var videoData: MovieVideos
+    private lateinit var reviewData: MovieReview
 
     fun requestLastFun(
         callback: MovieListCallback,
@@ -258,6 +260,32 @@ object LocalRepo {
         })
     }
 
+    fun requestMovieReviews(
+        callback: MovieReviewsCallback,
+        movieID: Int
+    ){
+        apiServices.doGetMovieReviews(movieID).enqueue(object: Callback<MovieReview>{
+            override fun onResponse(
+                call: Call<MovieReview>,
+                response: Response<MovieReview>
+            ) {
+                if(response.isSuccessful){
+                    reviewData = response.body()!!
+                    callback.onMovieReviewsReady(reviewData)
+                }else if (response.code() in 400..404) {
+                    val msg = "The videos didn't load properly from the API"
+                    callback.onMovieReviewsError(msg)
+                }
+            }
+            override fun onFailure(call: Call<MovieReview>, t: Throwable) {
+                t.printStackTrace()
+                val msg = "Error while getting video data"
+                callback.onMovieReviewsError(msg)
+            }
+
+        })
+    }
+
     fun createDatabase(context: Context) {
         mDatabase = MDatabase.getDatabase(context)
     }
@@ -275,6 +303,11 @@ object LocalRepo {
     interface MovieVideosCallback{
         fun onMovieVideosReady(videoData: MovieVideos, itemView: View)
         fun onMovieVideosError(errorMsg: String)
+    }
+
+    interface MovieReviewsCallback{
+        fun onMovieReviewsReady(reviewData: MovieReview)
+        fun onMovieReviewsError(errorMsg: String)
     }
 
 }
